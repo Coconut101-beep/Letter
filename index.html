@@ -8,14 +8,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Reenie+Beanie&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=20260810d" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20260811c" />
 </head>
 <body>
-  <div class="pink-veil" id="pink-veil" aria-hidden="true"></div>
+  <div class="pink-veil" id="pink-veil" aria-hidden="true">
+    <div class="veil-bloom" aria-hidden="true"></div>
+  </div>
 
   <!-- ===== PAGE 1 — sealed letter ===== -->
   <section class="view view-seal is-active" id="view-seal" data-view="seal" aria-label="Sealed letter">
-    <div class="seal-sky" aria-hidden="true" id="sky-stars"></div>
+    <div class="seal-script" aria-hidden="true">
+      <p>have loved you · forms numberless · keep this close · no matter how far · summer light · with love · stay with you · handwritten days · soft mornings · for you always · have loved you · forms numberless · keep this close · no matter how far · summer light · with love · stay with you · handwritten days · soft mornings · for you always</p>
+      <p>forms numberless · have loved you · stay with you · keep this close · with love · summer light · no matter how far · soft mornings · for you always · handwritten days · forms numberless · have loved you · stay with you · keep this close · with love · summer light · no matter how far · soft mornings · for you always</p>
+      <p>keep this close · with love · have loved you · forms numberless · summer light · stay with you · no matter how far · for you always · soft mornings · handwritten days · keep this close · with love · have loved you · forms numberless · summer light · stay with you · no matter how far · for you always</p>
+    </div>
 
     <p class="seal-opening" id="opening-line">
       I hope the words can stay with you no matter how far we are &lt;3.
@@ -30,16 +36,34 @@
             <span class="peek-line"></span>
             <span class="peek-line short"></span>
           </div>
-          <span class="wax-seal">L</span>
         </div>
+        <div class="envelope-grain" aria-hidden="true"></div>
       </div>
 
       <button type="button" class="heart-btn" id="heart-btn" aria-label="Open the letter">
-        <span class="heart-stars" id="heart-stars" aria-hidden="true"></span>
+        <svg class="heart-draw" viewBox="0 0 120 108" aria-hidden="true" focusable="false">
+          <path class="heart-ring heart-ring--outer" d="M60 96 C20 70 8 48 18 30 C26 16 42 14 60 30 C78 14 94 16 102 30 C112 48 100 70 60 96 Z" />
+          <path class="heart-ring heart-ring--mid" d="M60 86 C28 64 18 46 26 32 C32 22 44 22 60 36 C76 22 88 22 94 32 C102 46 92 64 60 86 Z" />
+          <path class="heart-ring heart-ring--inner" d="M60 74 C36 58 30 44 36 34 C40 27 48 28 60 40 C72 28 80 27 84 34 C90 44 84 58 60 74 Z" />
+        </svg>
       </button>
+
+      <div class="bloom-burst" aria-hidden="true">
+        <span class="bloom b1"></span>
+        <span class="bloom b2"></span>
+        <span class="bloom b3"></span>
+        <span class="bloom b4"></span>
+        <span class="bloom b5"></span>
+        <span class="bloom b6"></span>
+      </div>
     </div>
 
     <p class="seal-hint">tap the heart to open</p>
+
+    <aside class="seal-signature" aria-hidden="true">
+      <span class="seal-signature-date">2026 summer</span>
+      <span class="seal-signature-name">Lorina</span>
+    </aside>
   </section>
 
   <!-- ===== PAGE 2 — name + passkey ===== -->
@@ -138,7 +162,7 @@
 
   <audio id="bg-music" loop preload="metadata"></audio>
 
-  <script src="assets/js/app.js?v=20260810d"></script>
+  <script src="assets/js/app.js?v=20260811c"></script>
   <script>
     /* Inline Page-1 unlock — survives a failed app.js load */
     (function () {

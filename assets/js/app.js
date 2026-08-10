@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const CACHE = "20260810d";
+  const CACHE = "20260811c";
   const DATA_URL = `data/letters.json?v=${CACHE}`;
 
   const state = {
@@ -30,60 +30,6 @@
     return String(v || "")
       .trim()
       .toLowerCase();
-  }
-
-  /* ---------- Stars: heart outline + sky decoration ---------- */
-  function heartPoint(t) {
-    // Parametric heart, normalized to 0–1 within button box
-    const x = 16 * Math.pow(Math.sin(t), 3);
-    const y =
-      13 * Math.cos(t) -
-      5 * Math.cos(2 * t) -
-      2 * Math.cos(3 * t) -
-      Math.cos(4 * t);
-    // x range ~ -16..16, y range ~ -17..12
-    const nx = (x + 16) / 32;
-    const ny = (17 - y) / 30;
-    return { x: nx, y: ny };
-  }
-
-  function buildHeartStars() {
-    const host = $("heart-stars");
-    if (!host || host.childElementCount) return;
-    const count = 20;
-    for (let i = 0; i < count; i++) {
-      const t = (Math.PI * 2 * i) / count - Math.PI / 2;
-      const p = heartPoint(t);
-      const el = document.createElement("span");
-      el.className = "heart-star";
-      const size = 12 + ((i * 3) % 6);
-      const angle = (Math.random() * 2 - 1) * Math.PI; // drift direction
-      const dist = 8 + Math.random() * 8; // 8–16px
-      el.style.setProperty("--x", `${p.x * 100}%`);
-      el.style.setProperty("--y", `${p.y * 100}%`);
-      el.style.setProperty("--s", `${size}px`);
-      el.style.setProperty("--o", String(0.55 + (i % 5) * 0.08));
-      el.style.setProperty("--delay", `${(i * 0.17) % 3.2}s`);
-      el.style.setProperty("--dx", `${Math.cos(angle) * dist}px`);
-      el.style.setProperty("--dy", `${Math.sin(angle) * dist}px`);
-      el.style.setProperty("--dr", `${(Math.random() * 40 - 20).toFixed(1)}deg`);
-      host.appendChild(el);
-    }
-  }
-
-  function buildSkyStars() {
-    const host = $("sky-stars");
-    if (!host || host.childElementCount) return;
-    for (let i = 0; i < 28; i++) {
-      const el = document.createElement("span");
-      el.className = "sky-star";
-      el.style.left = `${Math.random() * 100}%`;
-      el.style.top = `${Math.random() * 100}%`;
-      el.style.setProperty("--size", `${4 + Math.random() * 7}px`);
-      el.style.setProperty("--o", String(0.25 + Math.random() * 0.45));
-      el.style.setProperty("--delay", `${(Math.random() * 3.2).toFixed(2)}s`);
-      host.appendChild(el);
-    }
   }
 
   /* ---------- Views ---------- */
@@ -429,8 +375,6 @@
   }
 
   async function init() {
-    buildHeartStars();
-    buildSkyStars();
     wireSeal();
     wirePasskey();
     wireNav();
