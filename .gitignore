@@ -1,0 +1,7 @@
+.DS_Store
+**/.DS_Store
+.tmp_unc_text/
+_writetest.txt
+.cursor/
+*.log
+.venv/

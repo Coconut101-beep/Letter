@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Letters from Lorina</title>
+  <meta name="description" content="A small vintage mail of gratitude — sealed for friends and family, opened only by the ones who know the passkey." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Reenie+Beanie&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20260810d" />
+</head>
+<body>
+  <div class="pink-veil" id="pink-veil" aria-hidden="true"></div>
+
+  <!-- ===== PAGE 1 — sealed letter ===== -->
+  <section class="view view-seal is-active" id="view-seal" data-view="seal" aria-label="Sealed letter">
+    <div class="seal-sky" aria-hidden="true" id="sky-stars"></div>
+
+    <p class="seal-opening" id="opening-line">
+      I hope the words can stay with you no matter how far we are &lt;3.
+    </p>
+
+    <div class="seal-stage" id="seal-stage">
+      <div class="envelope" aria-hidden="true">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body">
+          <div class="letter-peek">
+            <span class="peek-line"></span>
+            <span class="peek-line"></span>
+            <span class="peek-line short"></span>
+          </div>
+          <span class="wax-seal">L</span>
+        </div>
+      </div>
+
+      <button type="button" class="heart-btn" id="heart-btn" aria-label="Open the letter">
+        <span class="heart-stars" id="heart-stars" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <p class="seal-hint">tap the heart to open</p>
+  </section>
+
+  <!-- ===== PAGE 2 — name + passkey ===== -->
+  <section class="view view-passkey" id="view-passkey" data-view="passkey" aria-label="Name and passkey" hidden>
+    <button type="button" class="back-link" id="passkey-back">← back</button>
+
+    <form class="passkey-card" id="passkey-form" autocomplete="off" novalidate>
+      <h1 class="passkey-title">Your name &amp; <em>passkey</em></h1>
+      <p class="passkey-sub">Type the name I know you by, and the passkey I gave you.</p>
+
+      <label class="field">
+        <span>Name</span>
+        <input id="input-name" name="name" type="text" placeholder="Adi" required autocomplete="off" />
+      </label>
+      <label class="field">
+        <span>Passkey</span>
+        <input id="input-passkey" name="passkey" type="password" placeholder="••••••••" required autocomplete="off" />
+      </label>
+
+      <button class="btn btn-lemon" type="submit">Break the seal</button>
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+
+      <div class="swatch-row" aria-hidden="true">
+        <i class="sw sw-blush"></i>
+        <i class="sw sw-rose"></i>
+        <i class="sw sw-lemon"></i>
+        <i class="sw sw-cream"></i>
+      </div>
+    </form>
+  </section>
+
+  <!-- ===== PAGE 3 — memories collage ===== -->
+  <section class="view view-memories" id="view-memories" data-view="memories" aria-label="Memories" hidden>
+    <header class="memories-head">
+      <div>
+        <h2 id="memories-headline">kept close</h2>
+        <p class="sub" id="memories-sub">a little collage of us</p>
+      </div>
+      <p class="memories-for"><span>for</span> <em id="memories-name">you</em></p>
+    </header>
+
+    <div class="collage-board" id="collage-board" aria-label="Memory collage"></div>
+
+    <div class="memories-cta">
+      <button type="button" class="btn btn-cream" id="memories-continue">Open the letter.</button>
+    </div>
+  </section>
+
+  <!-- ===== PAGE 4 — letter + music ===== -->
+  <section class="view view-letter" id="view-letter" data-view="letter" aria-label="Your letter" hidden>
+    <div class="letter-page">
+      <button type="button" class="film-reel" id="music-btn" aria-pressed="false" aria-label="Play memory soundtrack">
+        <span class="reel-visual" aria-hidden="true">
+          <span class="reel-strip"></span>
+          <span class="reel-disc"></span>
+        </span>
+        <span class="reel-label" id="music-label">Play memory soundtrack</span>
+      </button>
+
+      <div class="letter-layout">
+        <article class="letter-copy">
+          <h1 class="letter-title" id="letter-title">A letter</h1>
+          <p class="letter-opener" id="letter-opener"></p>
+          <div class="letter-body" id="letter-body"></div>
+          <p class="letter-signoff">
+            <span id="letter-signoff">With love,</span>
+            <span class="sign-name" id="letter-signname">Lorina</span>
+          </p>
+        </article>
+
+        <aside class="letter-aside" aria-label="Kept close">
+          <figure class="aside-polaroid">
+            <div class="aside-media">
+              <img id="panel-img" alt="" loading="lazy" decoding="async" />
+            </div>
+            <figcaption class="hand" id="panel-cap"></figcaption>
+          </figure>
+
+          <blockquote class="aside-quote">
+            <span class="quote-mark" aria-hidden="true">“</span>
+            <p id="panel-quote"></p>
+          </blockquote>
+
+          <div class="aside-swatches">
+            <span class="label">kept close</span>
+            <span class="swatch-row" id="panel-swatches"></span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="letter-footer">
+        <button type="button" class="text-link" id="letter-another">Another letter</button>
+      </div>
+    </div>
+  </section>
+
+  <audio id="bg-music" loop preload="metadata"></audio>
+
+  <script src="assets/js/app.js?v=20260810d"></script>
+  <script>
+    /* Inline Page-1 unlock — survives a failed app.js load */
+    (function () {
+      var stage = document.getElementById("seal-stage");
+      var heart = document.getElementById("heart-btn");
+      var veil = document.getElementById("pink-veil");
+      var seal = document.getElementById("view-seal");
+      var passkey = document.getElementById("view-passkey");
+      if (!stage || !heart || !seal || !passkey) return;
+
+      var opening = false;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function goPasskey() {
+        seal.classList.remove("is-active");
+        seal.hidden = true;
+        passkey.hidden = false;
+        passkey.classList.add("is-active");
+        passkey.classList.add("is-entering");
+        window.scrollTo(0, 0);
+        setTimeout(function () { passkey.classList.remove("is-entering"); }, reduce ? 320 : 450);
+        if (veil) veil.classList.remove("is-on");
+        opening = false;
+        stage.classList.remove("is-opening");
+      }
+
+      function openSeal() {
+        if (opening || stage.classList.contains("is-opening")) return;
+        if (window.Lorina && typeof window.Lorina.openSeal === "function") {
+          window.Lorina.openSeal();
+          return;
+        }
+        opening = true;
+        stage.classList.add("is-opening");
+        if (reduce) {
+          if (veil) veil.classList.add("is-on");
+          setTimeout(goPasskey, 300);
+          return;
+        }
+        setTimeout(function () { if (veil) veil.classList.add("is-on"); }, 400);
+        setTimeout(goPasskey, 1500);
+      }
+
+      heart.addEventListener("click", openSeal);
+      heart.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openSeal();
+        }
+      });
+
+      window.__lorinaOpenSeal = openSeal;
+    })();
+
+    if (window.Lorina && typeof window.Lorina.init === "function") {
+      window.Lorina.init();
+    }
+  </script>
+</body>
+</html>

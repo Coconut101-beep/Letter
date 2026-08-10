@@ -1,0 +1,366 @@
+{
+  "version": 3,
+  "brand": "Lorina",
+  "openingLine": "I hope the words can stay with you no matter how far we are <3.",
+  "cacheBust": "20260810d",
+  "people": {
+    "adi": {
+      "name": "Adi",
+      "aliases": [
+        "adi"
+      ],
+      "greeting": "For Adi",
+      "title": "A letter for the boy who stayed",
+      "passkey": "MyBestBoyfriend",
+      "seal": "L&M",
+      "song": {
+        "title": "Song for Adi",
+        "artist": "Memory soundtrack",
+        "file": "assets/audio/adi-song.wav",
+        "playLabel": "Play memory soundtrack",
+        "pauseLabel": "Pause soundtrack"
+      },
+      "letter": {
+        "opener": "There are people who arrive like weather \u2014 sudden, total \u2014 and people who arrive like light through a curtain: quiet, and somehow already yours.",
+        "paragraphs": [
+          "Dear Adi,",
+          "This is a sample letter for design. Later the real words will come from my own pages, in your own photographs and memories. For now, imagine warm paper, a little pink in the margin, and all the soft things I meant to say out loud.",
+          "If I could bottle one thing from these years, it would be the sound of us laughing before we had language for why we needed it. Keep this passkey. Come back whenever you want the words again.",
+          "I hope the words can stay with you no matter how far we are."
+        ],
+        "signoff": "With love,",
+        "signName": "Lorina"
+      },
+      "panel": {
+        "image": "01.jpg",
+        "caption": "afternoon light",
+        "quote": "You stayed. That was the whole gift.",
+        "swatches": [
+          "blush",
+          "rose",
+          "lemon"
+        ]
+      },
+      "memories": {
+        "headline": "kept close",
+        "sub": "a little collage of us",
+        "background": "#222B24",
+        "items": [
+          {
+            "kind": "photo",
+            "src": "assets/img/adi/01.jpg",
+            "caption": "That night outside",
+            "alt": "Night outside",
+            "x": 4,
+            "y": 6,
+            "w": 28,
+            "rotate": -4,
+            "z": 3,
+            "aspect": "4/5"
+          },
+          {
+            "kind": "photo",
+            "src": "assets/img/adi/02.jpg",
+            "caption": "three of us",
+            "alt": "Three of us",
+            "x": 36,
+            "y": 4,
+            "w": 30,
+            "rotate": 3,
+            "z": 4,
+            "aspect": "4/5"
+          },
+          {
+            "kind": "ticket",
+            "caption": "metro \u00b7 02:14",
+            "x": 70,
+            "y": 8,
+            "w": 22,
+            "rotate": -8,
+            "z": 5,
+            "color": "lemon"
+          },
+          {
+            "kind": "photo",
+            "src": "assets/img/adi/10.jpg",
+            "caption": "July 5th \u00b7 a random Sunday",
+            "alt": "A random Sunday",
+            "x": 8,
+            "y": 42,
+            "w": 32,
+            "rotate": 2,
+            "z": 3,
+            "aspect": "5/4"
+          },
+          {
+            "kind": "filmstrip",
+            "frames": [
+              "assets/img/adi/03.jpg",
+              "assets/img/adi/04.jpg",
+              "assets/img/adi/05.jpg"
+            ],
+            "caption": "booth strips",
+            "x": 48,
+            "y": 38,
+            "w": 26,
+            "rotate": 5,
+            "z": 4
+          },
+          {
+            "kind": "video",
+            "src": "assets/img/adi/clip.mp4",
+            "caption": "moving light",
+            "alt": "Short memory clip",
+            "x": 72,
+            "y": 48,
+            "w": 22,
+            "rotate": -3,
+            "z": 5,
+            "aspect": "4/5"
+          },
+          {
+            "kind": "sticker",
+            "caption": "ros\u00e9",
+            "x": 42,
+            "y": 28,
+            "w": 12,
+            "rotate": 12,
+            "z": 6
+          },
+          {
+            "kind": "doodle",
+            "shape": "star",
+            "x": 2,
+            "y": 2,
+            "w": 4,
+            "rotate": 14,
+            "z": 7
+          },
+          {
+            "kind": "doodle",
+            "shape": "star",
+            "x": 88,
+            "y": 34,
+            "w": 3,
+            "rotate": -10,
+            "z": 7
+          },
+          {
+            "kind": "doodle",
+            "shape": "sparkle",
+            "x": 30,
+            "y": 72,
+            "w": 3,
+            "rotate": 0,
+            "z": 7
+          }
+        ]
+      }
+    },
+    "maya": {
+      "name": "Maya",
+      "aliases": [
+        "maya"
+      ],
+      "greeting": "For Maya",
+      "title": "Because you always knew the soft way out",
+      "passkey": "SoftSunlight",
+      "seal": "M&L",
+      "song": {
+        "title": "Song for Maya",
+        "artist": "Memory soundtrack",
+        "file": "assets/audio/maya-song.wav",
+        "playLabel": "Play memory soundtrack",
+        "pauseLabel": "Pause soundtrack"
+      },
+      "letter": {
+        "opener": "You always knew the soft way out \u2014 the door that let the light in, the sentence that ended the argument before it began.",
+        "paragraphs": [
+          "Dear Maya,",
+          "This is a sample letter for design. Later the real words will come from my own pages, in your own photographs and memories. For now, imagine warm paper, a little pink in the margin, and all the soft things I meant to say out loud.",
+          "Thank you for being the quiet in the room. Come back whenever you want the words again.",
+          "I hope the words can stay with you no matter how far we are."
+        ],
+        "signoff": "With love,",
+        "signName": "Lorina"
+      },
+      "panel": {
+        "image": "01.png",
+        "caption": "soft light",
+        "quote": "Soft was never weak. It was how you loved us.",
+        "swatches": [
+          "blush",
+          "rose",
+          "lemon"
+        ]
+      },
+      "memories": {
+        "headline": "soft sunlight",
+        "sub": "the quiet afternoons",
+        "background": "#222B24",
+        "items": [
+          {
+            "kind": "photo",
+            "src": "assets/img/maya/01.png",
+            "caption": "Sunlight kitchen",
+            "alt": "Sunlight kitchen",
+            "x": 6,
+            "y": 8,
+            "w": 32,
+            "rotate": -3,
+            "z": 3,
+            "aspect": "4/5"
+          },
+          {
+            "kind": "photo",
+            "src": "assets/img/maya/02.png",
+            "caption": "Maya laughing",
+            "alt": "Maya laughing",
+            "x": 44,
+            "y": 10,
+            "w": 30,
+            "rotate": 4,
+            "z": 4,
+            "aspect": "4/5"
+          },
+          {
+            "kind": "ticket",
+            "caption": "train \u00b7 09:40",
+            "x": 12,
+            "y": 52,
+            "w": 22,
+            "rotate": -10,
+            "z": 5,
+            "color": "lemon"
+          },
+          {
+            "kind": "sticker",
+            "caption": "soft light",
+            "x": 64,
+            "y": 48,
+            "w": 16,
+            "rotate": 8,
+            "z": 6
+          },
+          {
+            "kind": "doodle",
+            "shape": "star",
+            "x": 40,
+            "y": 4,
+            "w": 4,
+            "rotate": 12,
+            "z": 7
+          },
+          {
+            "kind": "doodle",
+            "shape": "sparkle",
+            "x": 82,
+            "y": 30,
+            "w": 3,
+            "rotate": 0,
+            "z": 7
+          }
+        ]
+      }
+    },
+    "mom": {
+      "name": "Mom",
+      "aliases": [
+        "mom",
+        "mum",
+        "mama"
+      ],
+      "greeting": "For Mom",
+      "title": "Home was never an address",
+      "passkey": "AlwaysHome",
+      "seal": "M",
+      "song": {
+        "title": "Song for Mom",
+        "artist": "Memory soundtrack",
+        "file": "assets/audio/mom-song.wav",
+        "playLabel": "Play memory soundtrack",
+        "pauseLabel": "Pause soundtrack"
+      },
+      "letter": {
+        "opener": "Home was never an address. It was the lamp left on, the door unlocked, the way you said come in before I even knocked.",
+        "paragraphs": [
+          "Dear Mom,",
+          "This is a sample letter for design. Later the real words will come from my own pages, in your own photographs and memories. For now, imagine warm paper, a little pink in the margin, and all the soft things I meant to say out loud.",
+          "Thank you for every ordinary evening that turned out to be the whole world. Come back whenever you want the words again.",
+          "I hope the words can stay with you no matter how far we are."
+        ],
+        "signoff": "With love,",
+        "signName": "Lorina"
+      },
+      "panel": {
+        "image": "01.png",
+        "caption": "home",
+        "quote": "Home was the light you left on.",
+        "swatches": [
+          "blush",
+          "rose",
+          "lemon"
+        ]
+      },
+      "memories": {
+        "headline": "always home",
+        "sub": "the kitchen, the lamp, the door",
+        "background": "#222B24",
+        "items": [
+          {
+            "kind": "photo",
+            "src": "assets/img/mom/01.png",
+            "caption": "Always home",
+            "alt": "Always home",
+            "x": 8,
+            "y": 8,
+            "w": 32,
+            "rotate": -2,
+            "z": 3,
+            "aspect": "4/5"
+          },
+          {
+            "kind": "photo",
+            "src": "assets/img/mom/02.png",
+            "caption": "Kitchen table",
+            "alt": "Kitchen table",
+            "x": 46,
+            "y": 12,
+            "w": 30,
+            "rotate": 3,
+            "z": 4,
+            "aspect": "4/5"
+          },
+          {
+            "kind": "ticket",
+            "caption": "home \u00b7 always",
+            "x": 14,
+            "y": 54,
+            "w": 22,
+            "rotate": 6,
+            "z": 5,
+            "color": "lemon"
+          },
+          {
+            "kind": "sticker",
+            "caption": "warm lamp",
+            "x": 64,
+            "y": 52,
+            "w": 16,
+            "rotate": -6,
+            "z": 6
+          },
+          {
+            "kind": "doodle",
+            "shape": "star",
+            "x": 40,
+            "y": 4,
+            "w": 4,
+            "rotate": 10,
+            "z": 7
+          }
+        ]
+      }
+    }
+  }
+}
