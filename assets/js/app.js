@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const CACHE = "20260812b";
+  const CACHE = "20260812c";
   const DATA_URL = `data/letters.json?v=${CACHE}`;
   const SHARED_SONG = {
     file: "assets/audio/Tides_in_the_Parlor.mp3",
@@ -68,6 +68,10 @@
       requestAnimationFrame(clearPasskeyFields);
       setTimeout(clearPasskeyFields, 50);
     }
+    /* Tear down Page 3 scratch immediately when leaving memories.
+       A live window.resize → getBoundingClientRect path interrupts iOS
+       momentum scrolling on Page 4 (address-bar collapse fires resize). */
+    if (name !== "memories") destroyScratch();
     if (name === "letter") startLetterIdleWave();
     else stopLetterIdleWave();
     window.scrollTo(0, 0);
@@ -537,14 +541,19 @@
       return;
     }
     clearLetterWaveClass();
-    /* Force restart if class was already present */
-    void view.offsetWidth;
-    view.classList.add("is-text-waving");
-    state.letterWaveClear = setTimeout(() => {
-      view.classList.remove("is-text-waving");
-      state.letterWaveClear = null;
-      pokeLetterIdle();
-    }, 1200);
+    /* Avoid synchronous layout (offsetWidth) — it can kill mobile momentum scroll */
+    requestAnimationFrame(() => {
+      if (!view.classList.contains("is-active") || document.hidden) {
+        pokeLetterIdle();
+        return;
+      }
+      view.classList.add("is-text-waving");
+      state.letterWaveClear = setTimeout(() => {
+        view.classList.remove("is-text-waving");
+        state.letterWaveClear = null;
+        pokeLetterIdle();
+      }, 1200);
+    });
   }
 
   function startLetterIdleWave() {
@@ -688,6 +697,7 @@
   function wireNav() {
     $("memories-continue")?.addEventListener("click", () => {
       if (!state.person) return;
+      destroyScratch();
       buildLetter(state.person);
       showView("letter");
     });

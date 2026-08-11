@@ -100,6 +100,9 @@
 
     function syncDisplaySize() {
       if (destroyed || revealed) return;
+      /* Skip work while the memories view is hidden — reading geometry here
+         during Page 4 scroll (iOS toolbar resize) stalls momentum scrolling. */
+      if (mount.closest && mount.closest(".view[hidden], .view:not(.is-active)")) return;
       const rect = mount.getBoundingClientRect();
       const nextW = Math.round(rect.width);
       const nextH = Math.round(rect.height);

@@ -16,7 +16,7 @@
   --ease-heart: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   --maxw: 1100px;
-  --cache: 20260812b;
+  --cache: 20260812c;
   --open-letter-red: #9E413C;
   --floral-shadow: drop-shadow(0 4px 10px rgba(20, 8, 8, 0.22));
   /* Flat Page 4 letter surface — same vintage cream as --paper, no white / no gradient */
@@ -119,7 +119,8 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; min-height: 100%; }
-html { scroll-behavior: smooth; }
+/* Avoid document-wide smooth scrolling — it fights touch momentum on mobile */
+html { scroll-behavior: auto; }
 body {
   background: var(--paper);
   color: var(--ink);
@@ -127,7 +128,7 @@ body {
   font-size: 17px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Paper grain + warm vignette */
@@ -1341,8 +1342,8 @@ h1, h2, h3, p { margin: 0; }
 .view-letter {
   position: relative;
   background: var(--seal-surface);
-  padding: clamp(36px, 6vh, 64px) clamp(16px, 4vw, 40px) 56px;
-  overflow-x: hidden;
+  padding: clamp(36px, 6vh, 64px) clamp(16px, 4vw, 40px) calc(56px + env(safe-area-inset-bottom, 0px));
+  overflow-x: clip;
   color: var(--type-on-seal);
 }
 .view-letter .seal-script { z-index: 0; }
@@ -1587,8 +1588,10 @@ h1, h2, h3, p { margin: 0; }
   position: relative;
   z-index: 3;
   margin-top: 22px;
+  margin-bottom: 12px;
   display: flex;
   justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 .view-letter .letter-footer .text-link {
   color: var(--type-on-seal);
@@ -1601,7 +1604,8 @@ h1, h2, h3, p { margin: 0; }
   70% { transform: translate3d(0, 0.85px, 0); }
 }
 .view-letter.is-text-waving .letter-body p {
-  animation: letterTextWave 1s ease-in-out both;
+  /* fill-mode none — don't leave transforms applied after the cue */
+  animation: letterTextWave 1s ease-in-out;
 }
 .view-letter.is-text-waving .letter-body p:nth-child(1) { animation-delay: 0ms; }
 .view-letter.is-text-waving .letter-body p:nth-child(2) { animation-delay: 55ms; }
