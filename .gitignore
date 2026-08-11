@@ -5,3 +5,7 @@ _writetest.txt
 .cursor/
 *.log
 .venv/
+
+# Raw per-person dumps at repo root (HEIC/docx) — not assets/img/adi/
+/Adi/
+

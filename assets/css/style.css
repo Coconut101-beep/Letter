@@ -16,7 +16,8 @@
   --ease-heart: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   --maxw: 1100px;
-  --cache: 20260811o;
+  --cache: 20260811t;
+  --zh-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
   /* Shared Page 1 / Page 2 surface (exact same treatment) */
   --seal-red: #8B2E2E;
   --seal-red-deep: #6E2424;
@@ -899,43 +900,237 @@ h1, h2, h3, p { margin: 0; }
   .open-letter-frame { transition: none; }
 }
 
-/* ========== PAGE 3 — Memories collage ========== */
+/* ========== PAGE 3 — Scratchboard memories ========== */
 .view-memories {
-  background: var(--board);
-  color: var(--paper);
-  padding: 36px 20px 48px;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(246, 212, 217, 0.28), transparent 50%),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+  color: var(--ink);
+  padding: 32px 20px 48px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
 }
-.memories-head {
-  max-width: var(--maxw);
-  margin: 0 auto 28px;
+.view-memories.is-active { display: flex; }
+
+/* Optional EN + ZH pair (used for hippocampus line; reusable for captions later) */
+.bilingual-block {
   display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.12em;
 }
-.memories-head h2 {
+.bilingual-block .lang-en {
+  display: block;
+  margin: 0;
+}
+.bilingual-block .lang-zh {
+  display: block;
+  margin: 0;
+  font-family: var(--zh-serif);
+  font-size: 0.72em;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  opacity: 0.62;
+}
+.bilingual-block .lang-zh[hidden] { display: none !important; }
+
+.memories-head {
+  width: min(100%, 720px);
+  margin: 0 auto 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+.memories-for {
+  align-self: flex-end;
+  text-align: right;
+  margin: 0;
+  margin-right: clamp(4px, 1.5vw, 12px);
+  max-width: min(46%, 220px);
+  pointer-events: none;
+}
+.memories-for-label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.8;
+}
+.memories-name {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(26px, 4vw, 34px);
+  line-height: 1.1;
+  color: #C47A8A;
+}
+
+.memories-head-copy { width: 100%; }
+#memories-headline-block {
+  margin: 0;
   font-family: var(--serif);
   font-weight: 500;
   font-style: italic;
-  font-size: clamp(36px, 5vw, 54px);
-  line-height: 1;
-  color: var(--paper);
+  font-size: clamp(20px, 3.6vw, 28px);
+  line-height: 1.25;
+  color: var(--ink);
+  max-width: 38ch;
 }
-.memories-head .sub {
-  margin-top: 8px;
-  font-family: var(--hand);
-  font-size: 26px;
-  color: rgba(251, 239, 217, 0.72);
+#memories-headline-block .lang-zh {
+  font-style: normal;
+  max-width: 28em;
 }
-.memories-for {
-  font-family: var(--serif);
-  font-size: 18px;
-  color: rgba(251, 239, 217, 0.7);
-  text-align: right;
-}
-.memories-for span { display: block; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--sans); opacity: 0.7; }
-.memories-for em { font-style: italic; font-size: 28px; color: var(--blush); }
 
+.scratch-stage {
+  position: relative;
+  width: min(100%, 720px);
+  aspect-ratio: var(--stage-aspect, 4 / 5);
+  max-height: min(78dvh, 820px);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--board);
+  box-shadow:
+    0 18px 40px rgba(34, 43, 36, 0.28),
+    inset 0 0 0 1px rgba(251, 239, 217, 0.08);
+  touch-action: none;
+  user-select: none;
+}
+.scratch-under {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.scratch-under picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.flat-board {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  background: var(--board);
+}
+.scratch-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+  transition: opacity 700ms var(--ease-soft);
+}
+.scratch-canvas.is-fading { opacity: 0; }
+.scratch-stage.is-revealed .scratch-canvas { pointer-events: none; }
+.scratch-caption {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 10px 16px;
+  max-width: 86%;
+  text-align: center;
+  font-family: var(--hand);
+  font-size: clamp(22px, 4.5vw, 30px);
+  line-height: 1.15;
+  color: var(--paper);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  transition: opacity 400ms var(--ease-soft);
+}
+.scratch-caption.is-hidden { opacity: 0; }
+
+.scratch-photo-caption {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 4;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 6px 12px;
+  max-width: 90%;
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--hand);
+  font-size: 20px;
+  color: var(--paper);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.scratch-photo-caption.bilingual-block {
+  align-items: center;
+}
+.scratch-photo-caption .lang-zh {
+  color: var(--paper);
+  opacity: 0.75;
+}
+
+.scratch-missing {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 3.5vw, 22px);
+  line-height: 1.35;
+  color: var(--paper);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(246, 212, 217, 0.18), transparent 45%),
+    linear-gradient(160deg, #2A342C, var(--board) 55%, #1A211C);
+}
+
+.memories-actions {
+  width: min(100%, 720px);
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+}
+.reveal-link {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+  padding: 4px 2px;
+}
+.reveal-link:hover,
+.reveal-link:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--rose);
+  outline: none;
+}
+.reveal-link.is-emphasized {
+  color: var(--ink);
+  border-bottom-color: var(--lemon);
+}
+
+/* Legacy collage helpers (unused by Plan B; kept for optional reuse) */
 .collage-board {
   position: relative;
   max-width: var(--maxw);
@@ -1101,37 +1296,41 @@ h1, h2, h3, p { margin: 0; }
 }
 
 .memories-cta {
-  max-width: var(--maxw);
-  margin: 32px auto 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 600ms var(--ease-soft), transform 600ms var(--ease-soft);
+  pointer-events: none;
   display: flex;
   justify-content: center;
 }
+.memories-cta.is-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.memories-cta[hidden] { display: none !important; }
 
-/* Mobile stack for collage */
 @media (max-width: 760px) {
-  .collage-board {
-    height: auto;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-    padding: 22px 16px 28px;
-    overflow: visible;
+  .memories-for {
+    align-self: center;
+    text-align: center;
+    max-width: 100%;
+    margin-right: 0;
   }
-  .collage-item {
-    position: relative !important;
-    left: auto !important;
-    top: auto !important;
-    width: min(78%, 280px) !important;
-    margin: 0 auto;
-    transform: rotate(var(--r, 0deg)) !important;
+  .memories-head-copy,
+  #memories-headline-block {
+    max-width: none;
+    align-items: center;
+    text-align: center;
   }
-  .collage-item[data-kind="doodle"] { width: 36px !important; }
-  .collage-item[data-kind="sticker"] { width: 140px !important; }
-  .collage-item[data-kind="ticket"] { width: 160px !important; }
-  .collage-item[data-kind="filmstrip"] { width: 180px !important; }
-  .memories-head { flex-direction: column; align-items: start; }
-  .memories-for { text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scratch-canvas,
+  .scratch-caption,
+  .memories-cta {
+    transition-duration: 120ms;
+  }
 }
 
 /* ========== PAGE 4 — Letter + music ========== */

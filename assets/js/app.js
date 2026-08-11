@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const CACHE = "20260811o";
+  const CACHE = "20260811t";
   const DATA_URL = `data/letters.json?v=${CACHE}`;
 
   const state = {
@@ -12,7 +12,12 @@
     opening: false,
     musicReady: false,
     wired: false,
+    scratch: null,
   };
+
+  function copy() {
+    return (state.data && state.data.copy) || {};
+  }
 
   const reduceMotion = () =>
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -118,101 +123,263 @@
     return null;
   }
 
-  /* ---------- Memories collage ---------- */
-  function mediaEl(src, alt, kind) {
-    const url = bust(src);
-    if (kind === "video" || /\.(mp4|webm|mov)(\?|$)/i.test(src)) {
-      const v = document.createElement("video");
-      v.src = url;
-      v.muted = true;
-      v.playsInline = true;
-      v.loop = true;
-      v.autoplay = true;
-      v.setAttribute("playsinline", "");
-      v.setAttribute("muted", "");
-      v.preload = "metadata";
-      v.setAttribute("aria-label", alt || "Memory clip");
-      v.addEventListener("loadeddata", () => {
-        v.play().catch(() => {});
-      });
-      return v;
+  /* ---------- Shared UI copy (from data.copy) ---------- */
+  function applySharedCopy() {
+    const c = copy();
+    const opening = c.openingLine || state.data?.openingLine;
+    if (opening && $("opening-line")) $("opening-line").textContent = opening;
+
+    if (c.seal) {
+      if (c.seal.hint && $("seal-hint")) $("seal-hint").textContent = c.seal.hint;
+      if (c.seal.heartAria && $("heart-btn")) {
+        $("heart-btn").setAttribute("aria-label", c.seal.heartAria);
+      }
     }
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = alt || "";
-    img.loading = "lazy";
-    img.decoding = "async";
-    return img;
+
+    if (c.passkey) {
+      if (c.passkey.titleHtml && $("passkey-title")) {
+        $("passkey-title").innerHTML = c.passkey.titleHtml;
+      }
+      if (c.passkey.sub && $("passkey-sub")) $("passkey-sub").textContent = c.passkey.sub;
+      if (c.passkey.submit && $("passkey-submit")) {
+        $("passkey-submit").textContent = c.passkey.submit;
+      }
+      if (c.passkey.back && $("passkey-back")) $("passkey-back").textContent = c.passkey.back;
+      if (c.passkey.namePlaceholder && $("input-name")) {
+        $("input-name").placeholder = c.passkey.namePlaceholder;
+      }
+      if (c.passkey.passkeyPlaceholder && $("input-passkey")) {
+        $("input-passkey").placeholder = c.passkey.passkeyPlaceholder;
+      }
+    }
+
+    if (c.memories) {
+      /* Only the hippocampus line is bilingual; other Page 3 copy is English-only */
+      setBilingual(
+        "memories-headline",
+        "memories-headline-zh",
+        c.memories.headline_en,
+        c.memories.headline_zh
+      );
+      if (c.memories.forLabel && $("memories-for-label")) {
+        $("memories-for-label").textContent = c.memories.forLabel;
+      }
+      if (c.memories.scratchCaption && $("scratch-caption")) {
+        $("scratch-caption").textContent = c.memories.scratchCaption;
+      }
+      if (c.memories.revealAll && $("reveal-all")) {
+        $("reveal-all").textContent = c.memories.revealAll;
+      }
+      if (c.memories.cta && $("memories-continue")) {
+        $("memories-continue").textContent = c.memories.cta;
+      }
+    }
+
+    if (c.letter) {
+      if (c.letter.asideLabel && $("letter-aside-label")) {
+        $("letter-aside-label").textContent = c.letter.asideLabel;
+      }
+      if (c.letter.another && $("letter-another")) {
+        $("letter-another").textContent = c.letter.another;
+      }
+    }
   }
 
+  /**
+   * Optional EN + ZH pair. ZH renders only when present — no empty line.
+   * Reusable later for any caption that gains caption_en / caption_zh in data.
+   */
+  function setBilingual(enId, zhId, en, zh) {
+    const enEl = $(enId);
+    const zhEl = $(zhId);
+    if (enEl) enEl.textContent = en || "";
+    if (!zhEl) return;
+    if (zh) {
+      zhEl.hidden = false;
+      zhEl.textContent = zh;
+    } else {
+      zhEl.hidden = true;
+      zhEl.textContent = "";
+    }
+  }
+
+  function setOptionalCaption(el, en, zh) {
+    if (!el) return;
+    if (!en) {
+      el.hidden = true;
+      el.textContent = "";
+      return;
+    }
+    el.hidden = false;
+    if (zh) {
+      el.replaceChildren();
+      const enSpan = document.createElement("span");
+      enSpan.className = "lang-en";
+      enSpan.textContent = en;
+      const zhSpan = document.createElement("span");
+      zhSpan.className = "lang-zh";
+      zhSpan.lang = "zh-Hans";
+      zhSpan.textContent = zh;
+      el.classList.add("bilingual-block");
+      el.append(enSpan, zhSpan);
+    } else {
+      el.classList.remove("bilingual-block");
+      el.textContent = en;
+    }
+  }
+
+  /* ---------- Page 3 — per-person scratchboard ---------- */
+  function destroyScratch() {
+    if (state.scratch && typeof state.scratch.destroy === "function") {
+      state.scratch.destroy();
+    }
+    state.scratch = null;
+  }
+
+  function showMemoriesCta() {
+    const cta = $("memories-cta");
+    if (!cta) return;
+    cta.hidden = false;
+    requestAnimationFrame(() => cta.classList.add("is-visible"));
+  }
+
+  /**
+   * Builds Page 3 from person.scratchboard.
+   * Drop-in shape (same for all 13):
+   *   people.<id>.scratchboard = {
+   *     image: "assets/img/<id>/scratchboard",  // base path, no extension
+   *     alt, aspect, background,
+   *     caption_en, caption_zh,           // optional board caption (ZH only if set)
+   *     headline_en, headline_zh          // optional overrides of shared copy
+   *   }
+   * Set image to null until that person's board is ready.
+   * Call only after the memories view is visible so the canvas can size.
+   */
   function buildMemories(person) {
-    const board = $("collage-board");
-    const headline = $("memories-headline");
-    const sub = $("memories-sub");
+    const stage = $("scratch-stage");
+    const picture = $("scratch-picture");
+    const img = $("scratch-img");
+    const webp = $("scratch-webp");
+    const missing = $("scratch-missing");
+    const canvas = $("scratch-canvas");
+    const caption = $("scratch-caption");
+    const photoCap = $("scratch-photo-caption");
+    const reveal = $("reveal-all");
+    const cta = $("memories-cta");
     const nameEl = $("memories-name");
-    if (!board || !person) return;
+    if (!stage || !person) return;
 
-    const mem = person.memories || { items: [] };
-    if (headline) headline.textContent = mem.headline || "kept close";
-    if (sub) sub.textContent = mem.sub || "";
+    destroyScratch();
+
+    const memCopy = copy().memories || {};
+    const board = person.scratchboard || {};
+
+    /* Hippocampus line only — ZH optional via headline_zh */
+    setBilingual(
+      "memories-headline",
+      "memories-headline-zh",
+      board.headline_en || memCopy.headline_en,
+      board.headline_zh || memCopy.headline_zh
+    );
+
+    const forLabel = $("memories-for-label");
+    if (forLabel) forLabel.textContent = memCopy.forLabel || "for";
     if (nameEl) nameEl.textContent = person.name || "you";
-    if (mem.background) board.style.backgroundColor = mem.background;
 
-    board.innerHTML = "";
-    (mem.items || []).forEach((item) => {
-      const wrap = document.createElement("div");
-      wrap.className = "collage-item";
-      wrap.dataset.kind = item.kind;
-      wrap.style.setProperty("--x", `${item.x ?? 0}%`);
-      wrap.style.setProperty("--y", `${item.y ?? 0}%`);
-      wrap.style.setProperty("--w", `${item.w ?? 24}%`);
-      wrap.style.setProperty("--r", `${item.rotate ?? 0}deg`);
-      wrap.style.setProperty("--z", String(item.z ?? 1));
+    if (caption) {
+      caption.textContent =
+        memCopy.scratchCaption || "Scratch the board to reveal memories";
+    }
+    if (reveal) reveal.textContent = memCopy.revealAll || "Reveal all";
+    if ($("memories-continue")) {
+      $("memories-continue").textContent = memCopy.cta || "Open the letter";
+    }
 
-      if (item.kind === "photo" || item.kind === "video") {
-        wrap.classList.add("polaroid");
-        if (item.aspect) wrap.style.setProperty("--aspect", item.aspect);
-        const media = document.createElement("div");
-        media.className = "media";
-        media.style.aspectRatio = item.aspect || "4/5";
-        media.appendChild(mediaEl(item.src, item.alt || item.caption, item.kind));
-        wrap.appendChild(media);
-        if (item.caption) {
-          const cap = document.createElement("p");
-          cap.className = "cap hand";
-          cap.textContent = item.caption;
-          wrap.appendChild(cap);
-        }
-      } else if (item.kind === "filmstrip") {
-        wrap.classList.add("filmstrip");
-        (item.frames || []).forEach((src) => {
-          const frame = document.createElement("div");
-          frame.className = "frame";
-          frame.appendChild(mediaEl(src, item.caption || "Film frame", "photo"));
-          wrap.appendChild(frame);
-        });
-        if (item.caption) {
-          const cap = document.createElement("p");
-          cap.className = "cap";
-          cap.textContent = item.caption;
-          wrap.appendChild(cap);
-        }
-      } else if (item.kind === "ticket") {
-        wrap.classList.add("ticket");
-        if (item.color) wrap.classList.add(`color-${item.color}`);
-        wrap.textContent = item.caption || "";
-      } else if (item.kind === "sticker") {
-        wrap.classList.add("sticker");
-        wrap.textContent = item.caption || "";
-      } else if (item.kind === "doodle") {
-        const d = document.createElement("span");
-        d.className = item.shape === "sparkle" ? "doodle-sparkle" : "doodle-star";
-        d.setAttribute("aria-hidden", "true");
-        wrap.appendChild(d);
+    /* Optional board caption — supports caption_en / caption_zh later without code change */
+    setOptionalCaption(photoCap, board.caption_en, board.caption_zh);
+
+    stage.style.setProperty("--stage-aspect", board.aspect || "4 / 5");
+    stage.style.backgroundColor = board.background || "#222B24";
+    stage.classList.remove("is-revealed", "prefers-reduced", "is-missing");
+    if (canvas) {
+      canvas.style.opacity = "1";
+      canvas.style.pointerEvents = "auto";
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+      canvas.classList.remove("is-fading");
+    }
+    if (caption) {
+      caption.hidden = false;
+      caption.classList.remove("is-hidden");
+    }
+    if (cta) {
+      cta.hidden = true;
+      cta.classList.remove("is-visible");
+    }
+    if (reveal) reveal.hidden = false;
+
+    const base = board.image;
+    const hasBoard = typeof base === "string" && base.length > 0;
+
+    if (!hasBoard) {
+      stage.classList.add("is-missing");
+      if (picture) picture.hidden = true;
+      if (missing) {
+        missing.hidden = false;
+        missing.textContent =
+          memCopy.missingBoard ||
+          "Memories for this letter aren’t on the board yet — the words are still yours to open.";
       }
+      if (canvas) {
+        canvas.style.opacity = "0";
+        canvas.style.pointerEvents = "none";
+      }
+      if (caption) {
+        caption.classList.add("is-hidden");
+        caption.hidden = true;
+      }
+      if (reveal) reveal.hidden = true;
+      showMemoriesCta();
+      return;
+    }
 
-      board.appendChild(wrap);
+    if (missing) missing.hidden = true;
+    if (picture) picture.hidden = false;
+    if (webp) webp.srcset = bust(`${base}.webp`);
+    if (img) {
+      img.src = bust(`${base}.jpg`);
+      img.alt = board.alt || `Memories for ${person.name || "you"}`;
+    }
+
+    if (!window.ScratchBoard || !canvas) {
+      showMemoriesCta();
+      return;
+    }
+
+    state.scratch = window.ScratchBoard.create({
+      mount: stage,
+      canvas,
+      caption,
+      cta,
+      revealLink: reveal,
+      threshold: 0.55,
+      logicalW: 900,
+      logicalH: 1125,
     });
+
+    /* Ensure cover paints after layout (view may have just become visible) */
+    requestAnimationFrame(() => {
+      state.scratch && state.scratch.sync && state.scratch.sync();
+      requestAnimationFrame(() => {
+        state.scratch && state.scratch.sync && state.scratch.sync();
+      });
+    });
+  }
+
+  function openMemories(person) {
+    showView("memories");
+    /* Size canvas only after the view is laid out */
+    requestAnimationFrame(() => buildMemories(person));
   }
 
   /* ---------- Letter ---------- */
@@ -396,7 +563,9 @@
         form.classList.add("is-shake");
         if (err) {
           err.hidden = false;
-          err.textContent = "That name and passkey don’t match. Try again?";
+          err.textContent =
+            (copy().passkey && copy().passkey.error) ||
+            "That name and passkey don’t match. Try again?";
         }
         return;
       }
@@ -406,8 +575,7 @@
       }
       state.personKey = found.key;
       state.person = found.person;
-      buildMemories(found.person);
-      showView("memories");
+      openMemories(found.person);
     });
 
     if (back) {
@@ -428,8 +596,7 @@
       stopMusic();
       state.personKey = null;
       state.person = null;
-      const board = $("collage-board");
-      if (board) board.innerHTML = "";
+      destroyScratch();
       showView("passkey");
     });
   }
@@ -442,6 +609,29 @@
       e.preventDefault();
       openSeal();
     });
+  }
+
+  /** Deep-link from Page 3 experiments: ?person=adi&view=letter */
+  async function handleDeepLink() {
+    const params = new URLSearchParams(window.location.search);
+    const personKey = norm(params.get("person"));
+    const view = norm(params.get("view"));
+    if (!personKey || !view) return false;
+    if (!state.data) await loadData();
+    const person = state.data?.people?.[personKey];
+    if (!person) return false;
+    state.personKey = personKey;
+    state.person = person;
+    if (view === "letter") {
+      buildLetter(person);
+      showView("letter");
+      return true;
+    }
+    if (view === "memories") {
+      openMemories(person);
+      return true;
+    }
+    return false;
   }
 
   async function init() {
@@ -459,13 +649,8 @@
     }
 
     await loadData();
-    if (state.data?.openingLine) {
-      const line = $("opening-line");
-      if (line) line.textContent = state.data.openingLine;
-    }
-    if (state.data?.cacheBust) {
-      // keep for future; CACHE constant already set
-    }
+    applySharedCopy();
+    await handleDeepLink();
   }
 
   window.Lorina = {

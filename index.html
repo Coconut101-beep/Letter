@@ -7,8 +7,8 @@
   <meta name="description" content="A small vintage mail of gratitude — sealed for friends and family, opened only by the ones who know the passkey." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Reenie+Beanie&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=20260811o" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Noto+Serif+SC:wght@400;500;600&family=Reenie+Beanie&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20260811t" />
 </head>
 <body>
   <div class="pink-veil" id="pink-veil" aria-hidden="true">
@@ -40,7 +40,7 @@
         <div class="envelope-grain" aria-hidden="true"></div>
       </div>
 
-      <button type="button" class="heart-btn" id="heart-btn" aria-label="Open the letter">
+      <button type="button" class="heart-btn" id="heart-btn" aria-label="Break the seal">
         <svg class="heart-draw" viewBox="0 0 120 108" aria-hidden="true" focusable="false">
           <path class="heart-ring heart-ring--outer" d="M60 96 C20 70 8 48 18 30 C26 16 42 14 60 30 C78 14 94 16 102 30 C112 48 100 70 60 96 Z" />
           <path class="heart-ring heart-ring--mid" d="M60 86 C28 64 18 46 26 32 C32 22 44 22 60 36 C76 22 88 22 94 32 C102 46 92 64 60 86 Z" />
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <p class="seal-hint type-body">tap the heart to open</p>
+    <p class="seal-hint type-body" id="seal-hint">tap the heart to break the seal</p>
 
     <aside class="seal-signature" aria-hidden="true">
       <span class="seal-signature-date">2026 summer</span>
@@ -97,8 +97,8 @@
 
       <form class="passkey-card" id="passkey-form" autocomplete="off" novalidate>
         <div class="passkey-card-grain" aria-hidden="true"></div>
-        <h1 class="passkey-title type-headline">Your name &amp; <em>passkey</em></h1>
-        <p class="passkey-sub type-body">Type the name I know you by, and the passkey I gave you.</p>
+        <h1 class="passkey-title type-headline" id="passkey-title">Your name &amp; <em>passkey</em></h1>
+        <p class="passkey-sub type-body" id="passkey-sub">The seal is yours now — type the name I know you by, and the passkey I left for you.</p>
 
         <label class="field type-label">
           <span>Name</span>
@@ -147,7 +147,7 @@
           </div>
         </label>
 
-        <button class="btn btn-lemon type-btn" type="submit">Break the seal</button>
+        <button class="btn btn-lemon type-btn" type="submit" id="passkey-submit">Break the seal</button>
         <p class="form-error" id="form-error" role="alert" hidden></p>
 
         <div class="swatch-row" aria-hidden="true">
@@ -167,20 +167,52 @@
     </div>
   </section>
 
-  <!-- ===== PAGE 3 — memories collage ===== -->
+  <!-- ===== PAGE 3 — scratchboard memories ===== -->
   <section class="view view-memories" id="view-memories" data-view="memories" aria-label="Memories" hidden>
     <header class="memories-head">
-      <div>
-        <h2 id="memories-headline">kept close</h2>
-        <p class="sub" id="memories-sub">a little collage of us</p>
+      <div class="memories-for" id="memories-for">
+        <span class="memories-for-label" id="memories-for-label">for</span>
+        <em class="memories-name" id="memories-name">you</em>
       </div>
-      <p class="memories-for"><span>for</span> <em id="memories-name">you</em></p>
+
+      <div class="memories-head-copy">
+        <h2 class="bilingual-block" id="memories-headline-block">
+          <span class="lang-en" id="memories-headline">You've got a permanent residency in my hippocampus. &lt;3</span>
+          <span class="lang-zh" id="memories-headline-zh" lang="zh-Hans">你在我海马体里有永久居留权 &lt;3</span>
+        </h2>
+      </div>
     </header>
 
-    <div class="collage-board" id="collage-board" aria-label="Memory collage"></div>
+    <div
+      class="scratch-stage"
+      id="scratch-stage"
+      style="--stage-aspect: 4 / 5"
+      aria-label="Scratchable memory board"
+    >
+      <div class="scratch-under" id="scratch-under">
+        <picture id="scratch-picture" hidden>
+          <source id="scratch-webp" type="image/webp" srcset="" />
+          <img
+            class="flat-board"
+            id="scratch-img"
+            src=""
+            alt=""
+            decoding="async"
+            fetchpriority="high"
+          />
+        </picture>
+        <p class="scratch-missing" id="scratch-missing" hidden></p>
+      </div>
+      <canvas class="scratch-canvas" id="scratch-canvas" aria-label="Scratch cover"></canvas>
+      <p class="scratch-caption" id="scratch-caption">Scratch the board to reveal memories</p>
+      <p class="scratch-photo-caption" id="scratch-photo-caption" hidden></p>
+    </div>
 
-    <div class="memories-cta">
-      <button type="button" class="btn btn-cream" id="memories-continue">Open the letter.</button>
+    <div class="memories-actions">
+      <button type="button" class="reveal-link" id="reveal-all">Reveal all</button>
+      <div class="memories-cta" id="memories-cta" hidden>
+        <button type="button" class="btn btn-cream" id="memories-continue">Open the letter</button>
+      </div>
     </div>
   </section>
 
@@ -206,7 +238,7 @@
           </p>
         </article>
 
-        <aside class="letter-aside" aria-label="Kept close">
+        <aside class="letter-aside" aria-label="Yours to keep">
           <figure class="aside-polaroid">
             <div class="aside-media">
               <img id="panel-img" alt="" loading="lazy" decoding="async" />
@@ -220,7 +252,7 @@
           </blockquote>
 
           <div class="aside-swatches">
-            <span class="label">kept close</span>
+            <span class="label" id="letter-aside-label">yours to keep</span>
             <span class="swatch-row" id="panel-swatches"></span>
           </div>
         </aside>
@@ -234,7 +266,8 @@
 
   <audio id="bg-music" loop preload="metadata"></audio>
 
-  <script src="assets/js/app.js?v=20260811o"></script>
+  <script src="assets/js/scratch-board.js?v=20260811t"></script>
+  <script src="assets/js/app.js?v=20260811t"></script>
   <script>
     /* Inline Page-1 unlock — survives a failed app.js load */
     (function () {
