@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Reenie+Beanie&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=20260811c" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20260811o" />
 </head>
 <body>
   <div class="pink-veil" id="pink-veil" aria-hidden="true">
@@ -23,7 +23,7 @@
       <p>keep this close · with love · have loved you · forms numberless · summer light · stay with you · no matter how far · for you always · soft mornings · handwritten days · keep this close · with love · have loved you · forms numberless · summer light · stay with you · no matter how far · for you always</p>
     </div>
 
-    <p class="seal-opening" id="opening-line">
+    <p class="seal-opening type-headline type-headline-accent" id="opening-line">
       I hope the words can stay with you no matter how far we are &lt;3.
     </p>
 
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <p class="seal-hint">tap the heart to open</p>
+    <p class="seal-hint type-body">tap the heart to open</p>
 
     <aside class="seal-signature" aria-hidden="true">
       <span class="seal-signature-date">2026 summer</span>
@@ -68,31 +68,103 @@
 
   <!-- ===== PAGE 2 — name + passkey ===== -->
   <section class="view view-passkey" id="view-passkey" data-view="passkey" aria-label="Name and passkey" hidden>
-    <button type="button" class="back-link" id="passkey-back">← back</button>
+    <!-- Same script wallpaper as Page 1 so the surface reads continuous -->
+    <div class="seal-script" aria-hidden="true">
+      <p>have loved you · forms numberless · keep this close · no matter how far · summer light · with love · stay with you · handwritten days · soft mornings · for you always · have loved you · forms numberless · keep this close · no matter how far · summer light · with love · stay with you · handwritten days · soft mornings · for you always</p>
+      <p>forms numberless · have loved you · stay with you · keep this close · with love · summer light · no matter how far · soft mornings · for you always · handwritten days · forms numberless · have loved you · stay with you · keep this close · with love · summer light · no matter how far · soft mornings · for you always</p>
+      <p>keep this close · with love · have loved you · forms numberless · summer light · stay with you · no matter how far · for you always · soft mornings · handwritten days · keep this close · with love · have loved you · forms numberless · summer light · stay with you · no matter how far · for you always</p>
+    </div>
 
-    <form class="passkey-card" id="passkey-form" autocomplete="off" novalidate>
-      <h1 class="passkey-title">Your name &amp; <em>passkey</em></h1>
-      <p class="passkey-sub">Type the name I know you by, and the passkey I gave you.</p>
+    <button type="button" class="back-link type-link" id="passkey-back">← back</button>
 
-      <label class="field">
-        <span>Name</span>
-        <input id="input-name" name="name" type="text" placeholder="Adi" required autocomplete="off" />
-      </label>
-      <label class="field">
-        <span>Passkey</span>
-        <input id="input-passkey" name="passkey" type="password" placeholder="••••••••" required autocomplete="off" />
-      </label>
-
-      <button class="btn btn-lemon" type="submit">Break the seal</button>
-      <p class="form-error" id="form-error" role="alert" hidden></p>
-
-      <div class="swatch-row" aria-hidden="true">
-        <i class="sw sw-blush"></i>
-        <i class="sw sw-rose"></i>
-        <i class="sw sw-lemon"></i>
-        <i class="sw sw-cream"></i>
+    <div class="passkey-stage">
+      <div class="open-letter" aria-hidden="true">
+        <div class="open-letter-frame">
+          <picture>
+            <source srcset="assets/img/open-letter-icon.webp?v=20260811o" type="image/webp" />
+            <img
+              id="open-letter-img"
+              src="assets/img/open-letter-icon.jpg?v=20260811o"
+              alt=""
+              width="720"
+              height="579"
+              decoding="async"
+              fetchpriority="low"
+            />
+          </picture>
+        </div>
       </div>
-    </form>
+
+      <form class="passkey-card" id="passkey-form" autocomplete="off" novalidate>
+        <div class="passkey-card-grain" aria-hidden="true"></div>
+        <h1 class="passkey-title type-headline">Your name &amp; <em>passkey</em></h1>
+        <p class="passkey-sub type-body">Type the name I know you by, and the passkey I gave you.</p>
+
+        <label class="field type-label">
+          <span>Name</span>
+          <input
+            id="input-name"
+            name="name"
+            type="text"
+            placeholder="Your name"
+            required
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+          />
+        </label>
+        <label class="field type-label">
+          <span>Passkey</span>
+          <div class="field-control">
+            <input
+              id="input-passkey"
+              name="passkey"
+              type="password"
+              placeholder="Your passkey"
+              required
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+            <button
+              type="button"
+              class="passkey-toggle"
+              id="passkey-toggle"
+              aria-label="Show passkey"
+              aria-pressed="false"
+              title="Show passkey"
+            >
+              <svg class="passkey-toggle-icon passkey-toggle-icon--show" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M2.5 12s3.8-6.2 9.5-6.2S21.5 12 21.5 12s-3.8 6.2-9.5 6.2S2.5 12 2.5 12Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4" />
+              </svg>
+              <svg class="passkey-toggle-icon passkey-toggle-icon--hide" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M2.5 12s3.8-6.2 9.5-6.2S21.5 12 21.5 12s-3.8 6.2-9.5 6.2S2.5 12 2.5 12Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4" />
+                <path d="M4 19.5 19.5 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+        </label>
+
+        <button class="btn btn-lemon type-btn" type="submit">Break the seal</button>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+
+        <div class="swatch-row" aria-hidden="true">
+          <i class="sw sw-blush"></i>
+          <i class="sw sw-rose"></i>
+          <i class="sw sw-lemon"></i>
+          <i class="sw sw-cream"></i>
+        </div>
+      </form>
+
+      <div class="passkey-decor" aria-hidden="true">
+        <span class="pk-bloom pk-b1"></span>
+        <span class="pk-bloom pk-b2"></span>
+        <span class="pk-bloom pk-b3"></span>
+        <span class="pk-bloom pk-b4"></span>
+      </div>
+    </div>
   </section>
 
   <!-- ===== PAGE 3 — memories collage ===== -->
@@ -162,7 +234,7 @@
 
   <audio id="bg-music" loop preload="metadata"></audio>
 
-  <script src="assets/js/app.js?v=20260811c"></script>
+  <script src="assets/js/app.js?v=20260811o"></script>
   <script>
     /* Inline Page-1 unlock — survives a failed app.js load */
     (function () {
@@ -183,6 +255,14 @@
         passkey.classList.add("is-active");
         passkey.classList.add("is-entering");
         window.scrollTo(0, 0);
+        if (window.Lorina && typeof window.Lorina.clearPasskeyFields === "function") {
+          window.Lorina.clearPasskeyFields();
+        } else {
+          var n = document.getElementById("input-name");
+          var p = document.getElementById("input-passkey");
+          if (n) n.value = "";
+          if (p) { p.value = ""; p.type = "password"; }
+        }
         setTimeout(function () { passkey.classList.remove("is-entering"); }, reduce ? 320 : 450);
         if (veil) veil.classList.remove("is-on");
         opening = false;

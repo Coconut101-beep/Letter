@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const CACHE = "20260811c";
+  const CACHE = "20260811o";
   const DATA_URL = `data/letters.json?v=${CACHE}`;
 
   const state = {
@@ -11,6 +11,7 @@
     person: null,
     opening: false,
     musicReady: false,
+    wired: false,
   };
 
   const reduceMotion = () =>
@@ -44,6 +45,12 @@
         setTimeout(() => v.classList.remove("is-entering"), reduceMotion() ? 320 : 450);
       }
     });
+    if (name === "passkey") {
+      clearPasskeyFields();
+      // Beat stubborn browser autofill that lands after paint
+      requestAnimationFrame(clearPasskeyFields);
+      setTimeout(clearPasskeyFields, 50);
+    }
     window.scrollTo(0, 0);
   }
 
@@ -307,12 +314,75 @@
     }
   }
 
+  /* ---------- Page 2 open-letter fade-in (stage already reserved; no CLS) ---------- */
+  function wireOpenLetter() {
+    const view = $("view-passkey");
+    const img = $("open-letter-img");
+    if (!view || !img) return;
+
+    const markReady = () => view.classList.add("is-icon-ready");
+
+    if (img.complete && img.naturalWidth > 0) {
+      markReady();
+      return;
+    }
+    img.addEventListener("load", markReady, { once: true });
+    img.addEventListener("error", markReady, { once: true });
+  }
+
+  /* ---------- Passkey field helpers ---------- */
+  function clearPasskeyFields() {
+    const name = $("input-name");
+    const pass = $("input-passkey");
+    const toggle = $("passkey-toggle");
+    if (name) name.value = "";
+    if (pass) {
+      pass.value = "";
+      pass.type = "password";
+    }
+    if (toggle) {
+      toggle.classList.remove("is-revealed");
+      toggle.setAttribute("aria-pressed", "false");
+      toggle.setAttribute("aria-label", "Show passkey");
+      toggle.title = "Show passkey";
+    }
+  }
+
+  function wirePasskeyToggle() {
+    const input = $("input-passkey");
+    const btn = $("passkey-toggle");
+    if (!input || !btn || btn.dataset.wired === "1") return;
+    btn.dataset.wired = "1";
+
+    btn.addEventListener("click", () => {
+      const revealing = input.type === "password";
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      input.type = revealing ? "text" : "password";
+      btn.classList.toggle("is-revealed", revealing);
+      btn.setAttribute("aria-pressed", revealing ? "true" : "false");
+      btn.setAttribute("aria-label", revealing ? "Hide passkey" : "Show passkey");
+      btn.title = revealing ? "Hide passkey" : "Show passkey";
+      try {
+        if (typeof start === "number" && typeof end === "number") {
+          input.setSelectionRange(start, end);
+        }
+      } catch (_) {
+        /* some browsers block selection on type switch */
+      }
+      input.focus();
+    });
+  }
+
   /* ---------- Wire forms / nav ---------- */
   function wirePasskey() {
     const form = $("passkey-form");
     const back = $("passkey-back");
     const err = $("form-error");
     if (!form) return;
+
+    clearPasskeyFields();
+    wirePasskeyToggle();
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -375,9 +445,13 @@
   }
 
   async function init() {
-    wireSeal();
-    wirePasskey();
-    wireNav();
+    if (!state.wired) {
+      state.wired = true;
+      wireSeal();
+      wireOpenLetter();
+      wirePasskey();
+      wireNav();
+    }
 
     if (state.data?.openingLine) {
       const line = $("opening-line");
@@ -398,6 +472,7 @@
     init,
     openSeal,
     showView,
+    clearPasskeyFields,
     state,
   };
 

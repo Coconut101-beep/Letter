@@ -16,7 +16,100 @@
   --ease-heart: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   --maxw: 1100px;
-  --cache: 20260810a;
+  --cache: 20260811o;
+  /* Shared Page 1 / Page 2 surface (exact same treatment) */
+  --seal-red: #8B2E2E;
+  --seal-red-deep: #6E2424;
+  --seal-surface:
+    radial-gradient(120% 90% at 50% 40%, rgba(0, 0, 0, 0.08), transparent 55%),
+    linear-gradient(160deg, var(--seal-red) 0%, var(--seal-red-deep) 100%);
+
+  /* Shared character format — Page 1 & Page 2 both reference these */
+  --type-ink: #3A322B;
+  --type-ink-warm: #4A342C;
+  --type-ink-soft: #6B5E52;
+  --type-on-seal: #F7E8D4;
+  --type-on-seal-soft: rgba(247, 232, 212, 0.9);
+
+  --type-headline-family: var(--serif);
+  --type-headline-weight: 500;
+  --type-headline-size: clamp(20px, 2.4vw, 26px);
+  --type-headline-lh: 1.12;
+  --type-headline-tracking: -0.01em;
+
+  --type-body-family: var(--sans);
+  --type-body-weight: 400;
+  --type-body-size: 13px;
+  --type-body-lh: 1.4;
+  --type-body-tracking: 0;
+
+  --type-label-family: var(--sans);
+  --type-label-weight: 400;
+  --type-label-size: 11px;
+  --type-label-lh: 1.3;
+  --type-label-tracking: 0.02em;
+
+  --type-btn-family: var(--sans);
+  --type-btn-weight: 500;
+  --type-btn-size: 14px;
+  --type-btn-lh: 1.2;
+  --type-btn-tracking: 0.01em;
+
+  --type-link-family: var(--serif);
+  --type-link-weight: 400;
+  --type-link-size: 17px;
+  --type-link-lh: 1.3;
+  --type-link-style: italic;
+}
+
+/* Shared type utilities — use on both seal + passkey surfaces */
+.type-headline {
+  font-family: var(--type-headline-family);
+  font-weight: var(--type-headline-weight);
+  font-size: var(--type-headline-size);
+  line-height: var(--type-headline-lh);
+  letter-spacing: var(--type-headline-tracking);
+  color: var(--type-ink-warm);
+  text-transform: none;
+}
+.type-headline em,
+.type-headline-accent {
+  font-style: italic;
+  font-weight: 400;
+}
+.type-body {
+  font-family: var(--type-body-family);
+  font-weight: var(--type-body-weight);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-tracking);
+  color: var(--type-ink-soft);
+  text-transform: none;
+}
+.type-label {
+  font-family: var(--type-label-family);
+  font-weight: var(--type-label-weight);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-lh);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--type-ink-soft);
+  text-transform: none;
+}
+.type-btn {
+  font-family: var(--type-btn-family);
+  font-weight: var(--type-btn-weight);
+  font-size: var(--type-btn-size);
+  line-height: var(--type-btn-lh);
+  letter-spacing: var(--type-btn-tracking);
+  text-transform: none;
+}
+.type-link {
+  font-family: var(--type-link-family);
+  font-weight: var(--type-link-weight);
+  font-size: var(--type-link-size);
+  line-height: var(--type-link-lh);
+  font-style: var(--type-link-style);
+  text-transform: none;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -90,35 +183,40 @@ h1, h2, h3, p { margin: 0; }
   justify-content: center;
   border: none;
   border-radius: 999px;
-  padding: 14px 28px;
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  padding: 10px 22px;
+  font-family: var(--type-btn-family);
+  font-size: var(--type-btn-size);
+  font-weight: var(--type-btn-weight);
+  line-height: var(--type-btn-lh);
+  letter-spacing: var(--type-btn-tracking);
+  text-transform: none;
   transition: transform 200ms var(--ease-soft), box-shadow 200ms, filter 200ms;
 }
 .btn:hover { transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
 .btn-lemon {
   background: var(--lemon);
-  color: var(--ink);
+  color: var(--type-ink);
   box-shadow: 0 8px 24px rgba(58, 50, 43, 0.12);
 }
 .btn-cream {
   background: var(--paper);
-  color: var(--ink);
+  color: var(--type-ink);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
 }
 .back-link, .text-link {
   background: none;
   border: none;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 18px;
-  color: var(--ink-soft);
-  padding: 8px 0;
+  font-family: var(--type-link-family);
+  font-style: var(--type-link-style);
+  font-weight: var(--type-link-weight);
+  font-size: var(--type-link-size);
+  line-height: var(--type-link-lh);
+  color: var(--type-ink-soft);
+  padding: 6px 0;
   text-decoration: underline;
   text-underline-offset: 4px;
+  text-transform: none;
 }
 .swatch-row { display: inline-flex; gap: 10px; align-items: center; }
 .sw {
@@ -159,8 +257,6 @@ h1, h2, h3, p { margin: 0; }
 
 /* ========== PAGE 1 — Seal (style_references: charcoal + crayon heart) ========== */
 .view-seal {
-  --seal-red: #8B2E2E;
-  --seal-red-deep: #6E2424;
   --heart-red: #D94A4A;
   --heart-pink: #E87A9A;
   --heart-pale: #F3B4C4;
@@ -171,9 +267,7 @@ h1, h2, h3, p { margin: 0; }
   padding: 48px 24px 96px;
   gap: 26px;
   overflow: hidden;
-  background:
-    radial-gradient(120% 90% at 50% 40%, rgba(0, 0, 0, 0.08), transparent 55%),
-    linear-gradient(160deg, var(--seal-red) 0%, var(--seal-red-deep) 100%);
+  background: var(--seal-surface);
 }
 .view-seal.is-active { display: flex; }
 
@@ -204,13 +298,16 @@ h1, h2, h3, p { margin: 0; }
   z-index: 2;
   max-width: 28ch;
   text-align: center;
-  font-family: var(--serif);
+  /* Shared headline tokens + intentional italic accent (like Page 2 passkey) */
+  font-family: var(--type-headline-family);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(22px, 3.4vw, 32px);
-  line-height: 1.35;
-  color: #F7E8D4;
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: var(--type-headline-lh);
+  letter-spacing: var(--type-headline-tracking);
+  color: var(--type-on-seal);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+  text-transform: none;
 }
 
 .seal-stage {
@@ -375,11 +472,16 @@ h1, h2, h3, p { margin: 0; }
 .seal-hint {
   position: relative;
   z-index: 2;
-  font-family: var(--hand);
-  font-size: 30px;
-  color: #F3E0C8;
-  opacity: 0.9;
+  /* Shared body tokens — cream on seal surface (slightly larger for distance) */
+  font-family: var(--type-body-family);
+  font-weight: var(--type-body-weight);
+  font-size: clamp(13px, 1.5vw, 15px);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-tracking);
+  color: var(--type-on-seal-soft);
+  opacity: 1;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  text-transform: none;
 }
 
 /* Signature — kept, tuned for brick-red field */
@@ -400,12 +502,12 @@ h1, h2, h3, p { margin: 0; }
   animation: signatureIn 700ms var(--ease-soft) 600ms forwards;
 }
 .seal-signature-date {
-  font-family: var(--serif);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  line-height: 1.2;
+  line-height: var(--type-label-lh);
 }
 .seal-signature-name {
   font-family: var(--hand);
@@ -455,89 +557,347 @@ h1, h2, h3, p { margin: 0; }
 .view-seal.is-opening .seal-opening { opacity: 0; transition: opacity 400ms; }
 .view-seal.is-opening .seal-signature { opacity: 0; transition: opacity 300ms; }
 
-/* ========== PAGE 2 — Passkey ========== */
+/* ========== PAGE 2 — Passkey (same --seal-surface as Page 1) ========== */
 .view-passkey {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 72px 20px;
-  background:
-    radial-gradient(ellipse at 20% 10%, rgba(246, 212, 217, 0.45), transparent 45%),
-    radial-gradient(ellipse at 90% 80%, rgba(242, 208, 107, 0.2), transparent 40%),
-    var(--paper);
+  padding: clamp(56px, 8vh, 80px) clamp(20px, 5vw, 40px);
+  overflow: hidden;
+  background: var(--seal-surface);
 }
+.view-passkey.is-active { display: flex; }
+
+/* Stage stacks: open-letter underlay → compact login card → accents */
+.passkey-stage {
+  --pk-card-w: 280px; /* ~half prior footprint; keeps card squat, not a flat strip */
+  --pk-letter-w: 760px;
+  position: relative;
+  z-index: 2;
+  width: min(var(--pk-letter-w), 100%);
+  max-width: 100%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  min-height: min(640px, 90vw);
+  padding: 36px 0 28px;
+}
+
+.open-letter {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.open-letter-frame {
+  width: 100%;
+  transform: rotate(1.5deg);
+  opacity: 0;
+  transition: opacity 650ms var(--ease-soft);
+}
+.view-passkey.is-icon-ready .open-letter-frame { opacity: 0.78; }
+.open-letter-frame picture,
+.open-letter-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+.open-letter-frame img {
+  /* soft underlay — keep cream readable against seal-red; envelope shadow on the asset */
+  filter:
+    drop-shadow(0 22px 44px rgba(20, 8, 8, 0.4))
+    sepia(0.1) saturate(0.92) brightness(1.02);
+}
+
+/* low-density blooms above card plane */
+.passkey-decor {
+  position: absolute;
+  inset: -6% -4%;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.55;
+}
+.pk-bloom {
+  position: absolute;
+  border-radius: 60% 40% 55% 45%;
+  filter: blur(0.4px);
+  opacity: 0.55;
+}
+.pk-bloom.pk-b1 {
+  left: 2%; top: 10%;
+  width: 14px; height: 14px;
+  background: #7BA3D4;
+  transform: rotate(-12deg);
+}
+.pk-bloom.pk-b2 {
+  right: 4%; top: 14%;
+  width: 11px; height: 13px;
+  background: #E9A7B4;
+}
+.pk-bloom.pk-b3 {
+  left: 6%; bottom: 12%;
+  width: 12px; height: 16px;
+  background: #F2D06B;
+  opacity: 0.4;
+}
+.pk-bloom.pk-b4 {
+  right: 8%; bottom: 16%;
+  width: 13px; height: 13px;
+  background: #C9A0E0;
+  opacity: 0.38;
+}
+
 .view-passkey .back-link {
   position: absolute;
   top: 28px;
   left: 28px;
+  z-index: 5;
+  color: var(--type-on-seal);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
+.view-passkey .back-link:hover { color: #FFF1DD; }
+
+/* Compact paper card — ~half prior height; florals frame all sides */
 .passkey-card {
-  width: min(420px, 100%);
-  background: var(--cream-card);
-  border-radius: 28px;
-  padding: 40px 34px 32px;
+  position: relative;
+  z-index: 3;
+  width: min(var(--pk-card-w), 36%);
+  margin: 24px auto 0;
+  padding: 14px 18px 12px;
+  border-radius: 3px 7px 9px 5px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 42%),
+    linear-gradient(180deg, #FFF8EC 0%, #F7EFE0 45%, #EDE0C8 100%);
   box-shadow:
-    0 24px 60px rgba(58, 50, 43, 0.12),
-    0 0 0 1px rgba(58, 50, 43, 0.05);
+    0 24px 48px rgba(20, 8, 8, 0.38),
+    0 8px 18px rgba(58, 50, 43, 0.16),
+    0 0 0 1.75px rgba(40, 28, 24, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 6px;
+  transform: rotate(-0.6deg);
+  animation: passkeyCardIn 560ms var(--ease-soft) both;
 }
+.passkey-card-grain {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(58, 50, 43, 0.08) 0.8px, transparent 1px),
+    radial-gradient(rgba(90, 60, 50, 0.06) 1px, transparent 1.5px);
+  background-size: 3px 3px, 7px 7px;
+}
+.passkey-card > *:not(.passkey-card-grain) { position: relative; z-index: 1; }
+
+@keyframes passkeyCardIn {
+  from { opacity: 0; transform: rotate(-0.6deg) translateY(14px); }
+  to { opacity: 1; transform: rotate(-0.6deg) translateY(0); }
+}
+
 .passkey-title {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(34px, 5vw, 44px);
-  line-height: 1.05;
+  font-family: var(--type-headline-family);
+  font-weight: var(--type-headline-weight);
+  font-size: var(--type-headline-size);
+  line-height: var(--type-headline-lh);
+  letter-spacing: var(--type-headline-tracking);
+  color: var(--type-ink-warm);
+  white-space: nowrap;
+  text-transform: none;
 }
-.passkey-title em { font-style: italic; font-weight: 400; }
+.passkey-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--type-ink-warm);
+}
 .passkey-sub {
-  font-size: 15px;
-  color: var(--ink-soft);
-  margin-bottom: 4px;
+  font-family: var(--type-body-family);
+  font-weight: var(--type-body-weight);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-tracking);
+  color: var(--type-ink-soft);
+  margin: 0;
+  text-transform: none;
 }
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  color: var(--ink-soft);
+  gap: 4px;
+  font-family: var(--type-label-family);
+  font-weight: var(--type-label-weight);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-lh);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--type-ink-soft);
+  text-transform: none;
 }
 .field input {
   appearance: none;
-  border: 1.5px dashed rgba(58, 50, 43, 0.35);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.55);
-  padding: 14px 16px;
-  font-family: var(--serif);
-  font-size: 20px;
-  color: var(--ink);
+  border: 1.5px dashed rgba(40, 28, 24, 0.38);
+  border-radius: 4px 8px 6px 4px;
+  background: rgba(255, 248, 236, 0.72);
+  padding: 7px 11px;
+  min-height: 38px; /* comfortable tap target floor */
+  font-family: var(--type-headline-family);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--type-ink);
   outline: none;
-  transition: border-color 180ms, box-shadow 180ms, background 180ms;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: border-color 180ms var(--ease-soft), box-shadow 180ms var(--ease-soft), background 180ms var(--ease-soft);
+  width: 100%;
+}
+.field input::placeholder {
+  color: var(--type-ink-warm);
+  opacity: 0.38;
+  font-style: italic;
 }
 .field input:focus {
   border-style: solid;
   border-color: var(--rose);
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(233, 167, 180, 0.28);
+  background: #FFFCF6;
+  box-shadow:
+    0 0 0 3px rgba(233, 167, 180, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
-.passkey-card .btn { width: 100%; margin-top: 4px; }
+.field input:focus::placeholder { opacity: 0.22; }
+
+/* Passkey field + show/hide toggle */
+.field-control {
+  position: relative;
+  display: block;
+}
+.field-control input {
+  padding-right: 42px;
+}
+.passkey-toggle {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--type-ink-warm);
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity 180ms var(--ease-soft), background 180ms var(--ease-soft), color 180ms var(--ease-soft);
+}
+.passkey-toggle:hover {
+  opacity: 0.9;
+  background: rgba(233, 167, 180, 0.12);
+}
+.passkey-toggle:focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 1px;
+  opacity: 1;
+}
+.passkey-toggle-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+.passkey-toggle .passkey-toggle-icon--hide { display: none; }
+.passkey-toggle.is-revealed .passkey-toggle-icon--show { display: none; }
+.passkey-toggle.is-revealed .passkey-toggle-icon--hide { display: block; }
+.form-error[hidden] { display: none !important; min-height: 0; }
+.passkey-card .btn-lemon {
+  width: 100%;
+  margin-top: 0;
+  padding: 9px 16px;
+  min-height: 38px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #F6D97A 0%, var(--lemon) 55%, #E4BE4E 100%);
+  box-shadow:
+    0 8px 18px rgba(58, 50, 43, 0.16),
+    0 0 0 1px rgba(40, 28, 24, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.passkey-card .btn-lemon:hover {
+  filter: brightness(1.02);
+  box-shadow:
+    0 10px 22px rgba(58, 50, 43, 0.2),
+    0 0 0 1px rgba(40, 28, 24, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
 .form-error {
-  font-family: var(--serif);
+  font-family: var(--type-headline-family);
   font-style: italic;
+  font-weight: 400;
   color: #9B4A5A;
-  font-size: 15px;
-  min-height: 1.2em;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  min-height: 0;
 }
 .passkey-card.is-shake { animation: shake 420ms var(--ease-soft); }
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
+  0%, 100% { transform: rotate(-0.6deg) translateX(0); }
+  20% { transform: rotate(-0.6deg) translateX(-8px); }
+  40% { transform: rotate(-0.6deg) translateX(8px); }
+  60% { transform: rotate(-0.6deg) translateX(-5px); }
+  80% { transform: rotate(-0.6deg) translateX(5px); }
 }
-.passkey-card .swatch-row { justify-content: center; margin-top: 6px; }
+.passkey-card .swatch-row { justify-content: center; margin-top: 0; gap: 7px; }
+.passkey-card .sw { width: 10px; height: 10px; }
+
+@media (max-width: 860px) {
+  .passkey-stage {
+    --pk-card-w: 260px;
+    --pk-letter-w: 620px;
+    min-height: min(560px, 100vw);
+    padding: 28px 0 20px;
+  }
+  .passkey-card { margin-top: 24px; width: min(var(--pk-card-w), 42%); }
+  .view-passkey.is-icon-ready .open-letter-frame { opacity: 0.72; }
+}
+@media (max-width: 480px) {
+  .view-passkey {
+    overflow-x: hidden;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .passkey-stage {
+    --pk-card-w: 240px;
+    --pk-letter-w: 620px;
+    width: 620px;
+    max-width: none;
+    min-height: 520px;
+    padding: 20px 0 16px;
+    overflow: visible;
+  }
+  .open-letter-frame { width: 100%; }
+  .passkey-title {
+    white-space: normal;
+    font-size: clamp(18px, 5.2vw, 24px);
+  }
+  .passkey-card {
+    width: min(var(--pk-card-w), 62vw);
+    padding: 16px 16px 12px;
+    gap: 7px;
+    margin-top: 20px;
+  }
+  .field input { min-height: 40px; padding: 8px 11px; font-size: 16px; }
+  .view-passkey.is-icon-ready .open-letter-frame { opacity: 0.65; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .passkey-card { animation: none; }
+  .open-letter-frame { transition: none; }
+}
 
 /* ========== PAGE 3 — Memories collage ========== */
 .view-memories {
