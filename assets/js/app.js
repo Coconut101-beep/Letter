@@ -2,8 +2,15 @@
 (function () {
   "use strict";
 
-  const CACHE = "20260811t";
+  const CACHE = "20260812b";
   const DATA_URL = `data/letters.json?v=${CACHE}`;
+  const SHARED_SONG = {
+    file: "assets/audio/Tides_in_the_Parlor.mp3",
+    playLabel: "Play memory soundtrack",
+    pauseLabel: "Pause soundtrack",
+  };
+  const MUSIC_MAX_LOOPS = 100;
+  const LETTER_IDLE_MS = 60000;
 
   const state = {
     data: null,
@@ -11,8 +18,13 @@
     person: null,
     opening: false,
     musicReady: false,
+    musicLoops: 0,
+    musicEndedHandler: null,
     wired: false,
     scratch: null,
+    letterIdleTimer: null,
+    letterWaveClear: null,
+    letterIdleWired: false,
   };
 
   function copy() {
@@ -56,6 +68,8 @@
       requestAnimationFrame(clearPasskeyFields);
       setTimeout(clearPasskeyFields, 50);
     }
+    if (name === "letter") startLetterIdleWave();
+    else stopLetterIdleWave();
     window.scrollTo(0, 0);
   }
 
@@ -175,13 +189,8 @@
       }
     }
 
-    if (c.letter) {
-      if (c.letter.asideLabel && $("letter-aside-label")) {
-        $("letter-aside-label").textContent = c.letter.asideLabel;
-      }
-      if (c.letter.another && $("letter-another")) {
-        $("letter-another").textContent = c.letter.another;
-      }
+    if (c.letter && c.letter.another && $("letter-another")) {
+      $("letter-another").textContent = c.letter.another;
     }
   }
 
@@ -383,102 +392,193 @@
   }
 
   /* ---------- Letter ---------- */
+  function letterParagraphs(letter) {
+    const paras = Array.isArray(letter.paragraphs) ? letter.paragraphs.slice() : [];
+    const opener = (letter.opener || "").trim();
+    if (opener && (!paras.length || paras[0] !== opener)) {
+      paras.unshift(opener);
+    }
+    return paras;
+  }
+
   function buildLetter(person) {
     if (!person) return;
     const letter = person.letter || {};
-    const panel = person.panel || {};
 
     $("letter-title").textContent = person.title || "A letter";
-    $("letter-opener").textContent = letter.opener || "";
     $("letter-signoff").textContent = letter.signoff || "With love,";
     $("letter-signname").textContent = letter.signName || "Lorina";
 
     const body = $("letter-body");
     body.innerHTML = "";
-    (letter.paragraphs || []).forEach((text) => {
+    letterParagraphs(letter).forEach((text) => {
       const p = document.createElement("p");
       p.textContent = text;
       body.appendChild(p);
     });
 
-    const img = $("panel-img");
-    const key = state.personKey;
-    if (img && panel.image) {
-      const src = panel.image.includes("/")
-        ? panel.image
-        : `assets/img/${key}/${panel.image}`;
-      img.src = bust(src);
-      img.alt = panel.caption || person.name || "";
-    }
-    $("panel-cap").textContent = panel.caption || "";
-    $("panel-quote").textContent = panel.quote || "";
-
-    const sw = $("panel-swatches");
-    sw.innerHTML = "";
-    (panel.swatches || ["blush", "rose", "lemon"]).forEach((name) => {
-      const i = document.createElement("i");
-      i.className = `sw sw-${name}`;
-      sw.appendChild(i);
-    });
-
-    setupMusic(person);
+    setupMusic();
   }
 
-  /* ---------- Music ---------- */
-  function setupMusic(person) {
-    const audio = $("bg-music");
+  /* ---------- Music (one shared track, capped replay) ---------- */
+  function musicCopy() {
+    const song = (state.data && state.data.soundtrack) || SHARED_SONG;
+    return {
+      file: song.file || SHARED_SONG.file,
+      playLabel: song.playLabel || SHARED_SONG.playLabel,
+      pauseLabel: song.pauseLabel || SHARED_SONG.pauseLabel,
+    };
+  }
+
+  function setMusicUi(playing) {
     const btn = $("music-btn");
     const label = $("music-label");
-    if (!audio || !btn || !person || !person.song) return;
+    if (!btn) return;
+    const { playLabel, pauseLabel } = musicCopy();
+    btn.classList.toggle("is-playing", playing);
+    btn.setAttribute("aria-pressed", playing ? "true" : "false");
+    btn.setAttribute("aria-label", playing ? pauseLabel : playLabel);
+    if (label) label.textContent = playing ? pauseLabel : playLabel;
+  }
 
-    const song = person.song;
-    const playLabel = song.playLabel || "Play memory soundtrack";
-    const pauseLabel = song.pauseLabel || "Pause soundtrack";
+  function setupMusic() {
+    const audio = $("bg-music");
+    const btn = $("music-btn");
+    if (!audio || !btn) return;
+
+    const { file, playLabel } = musicCopy();
+
+    if (state.musicEndedHandler) {
+      audio.removeEventListener("ended", state.musicEndedHandler);
+      state.musicEndedHandler = null;
+    }
 
     audio.pause();
+    audio.loop = false;
     audio.removeAttribute("src");
-    audio.src = bust(song.file);
+    audio.src = bust(file);
     audio.load();
     state.musicReady = true;
+    state.musicLoops = 0;
+    setMusicUi(false);
 
-    btn.classList.remove("is-playing");
-    btn.setAttribute("aria-pressed", "false");
-    btn.setAttribute("aria-label", playLabel);
-    label.textContent = playLabel;
+    state.musicEndedHandler = () => {
+      state.musicLoops += 1;
+      if (state.musicLoops >= MUSIC_MAX_LOOPS) {
+        audio.pause();
+        audio.currentTime = 0;
+        setMusicUi(false);
+        return;
+      }
+      audio.currentTime = 0;
+      audio.play().catch((e) => console.warn("audio replay failed", e));
+    };
+    audio.addEventListener("ended", state.musicEndedHandler);
 
     btn.onclick = async () => {
       if (!state.musicReady) return;
       if (audio.paused) {
+        /* Manual restart (from start / after end) resets the loop counter */
+        if (audio.ended || audio.currentTime === 0) {
+          state.musicLoops = 0;
+        }
         try {
           await audio.play();
-          btn.classList.add("is-playing");
-          btn.setAttribute("aria-pressed", "true");
-          btn.setAttribute("aria-label", pauseLabel);
-          label.textContent = pauseLabel;
+          setMusicUi(true);
         } catch (e) {
           console.warn("audio play failed", e);
         }
       } else {
         audio.pause();
-        btn.classList.remove("is-playing");
-        btn.setAttribute("aria-pressed", "false");
-        btn.setAttribute("aria-label", playLabel);
-        label.textContent = playLabel;
+        setMusicUi(false);
       }
     };
+
+    /* Ensure paused label is correct even if copy loads later */
+    if (!btn.classList.contains("is-playing")) {
+      btn.setAttribute("aria-label", playLabel);
+      const label = $("music-label");
+      if (label) label.textContent = playLabel;
+    }
   }
 
   function stopMusic() {
     const audio = $("bg-music");
-    const btn = $("music-btn");
     if (audio) {
       audio.pause();
       audio.currentTime = 0;
     }
-    if (btn) {
-      btn.classList.remove("is-playing");
-      btn.setAttribute("aria-pressed", "false");
+    state.musicLoops = 0;
+    setMusicUi(false);
+  }
+
+  /* ---------- Page 4 idle reading-focus wave ---------- */
+  function clearLetterWaveClass() {
+    const view = $("view-letter");
+    if (view) view.classList.remove("is-text-waving");
+    if (state.letterWaveClear) {
+      clearTimeout(state.letterWaveClear);
+      state.letterWaveClear = null;
     }
+  }
+
+  function pokeLetterIdle() {
+    if (!$("view-letter")?.classList.contains("is-active")) return;
+    if (reduceMotion()) return;
+    if (document.hidden) return;
+    if (state.letterIdleTimer) clearTimeout(state.letterIdleTimer);
+    state.letterIdleTimer = setTimeout(fireLetterWave, LETTER_IDLE_MS);
+  }
+
+  function fireLetterWave() {
+    const view = $("view-letter");
+    if (!view || !view.classList.contains("is-active") || document.hidden || reduceMotion()) {
+      pokeLetterIdle();
+      return;
+    }
+    clearLetterWaveClass();
+    /* Force restart if class was already present */
+    void view.offsetWidth;
+    view.classList.add("is-text-waving");
+    state.letterWaveClear = setTimeout(() => {
+      view.classList.remove("is-text-waving");
+      state.letterWaveClear = null;
+      pokeLetterIdle();
+    }, 1200);
+  }
+
+  function startLetterIdleWave() {
+    wireLetterIdleOnce();
+    clearLetterWaveClass();
+    pokeLetterIdle();
+  }
+
+  function stopLetterIdleWave() {
+    if (state.letterIdleTimer) {
+      clearTimeout(state.letterIdleTimer);
+      state.letterIdleTimer = null;
+    }
+    clearLetterWaveClass();
+  }
+
+  function wireLetterIdleOnce() {
+    if (state.letterIdleWired) return;
+    state.letterIdleWired = true;
+    const reset = () => pokeLetterIdle();
+    window.addEventListener("scroll", reset, { passive: true });
+    window.addEventListener("pointerdown", reset, { passive: true });
+    window.addEventListener("keydown", reset);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (state.letterIdleTimer) {
+          clearTimeout(state.letterIdleTimer);
+          state.letterIdleTimer = null;
+        }
+        clearLetterWaveClass();
+      } else if ($("view-letter")?.classList.contains("is-active")) {
+        pokeLetterIdle();
+      }
+    });
   }
 
   /* ---------- Page 2 open-letter fade-in (stage already reserved; no CLS) ---------- */

@@ -1,8 +1,8 @@
 {
-  "version": 4,
+  "version": 5,
   "brand": "Lorina",
   "openingLine": "I hope the words can stay with you no matter how far we are <3.",
-  "cacheBust": "20260811t",
+  "cacheBust": "20260812b",
   "people": {
     "adi": {
       "name": "Adi",
@@ -13,13 +13,6 @@
       "title": "A letter for Adi",
       "passkey": "MyBestBoyfriend",
       "seal": "L&M",
-      "song": {
-        "title": "Song for Adi",
-        "artist": "Memory soundtrack",
-        "file": "assets/audio/adi-song.wav",
-        "playLabel": "Play memory soundtrack",
-        "pauseLabel": "Pause soundtrack"
-      },
       "letter": {
         "opener": "Today is July 5th; it’s a very random Sunday. The weather outside is very gloomy, with a sea salt breeze I really love. It’s 26 degrees temperature-wise. And I am listening to Taylor Swift’s “Champagne Problems” on repeat. But no worries, I am not drinking champagne here without you; instead, I am having a lactose-free coffee from early this morning. So everything is cozy.",
         "paragraphs": [
@@ -42,7 +35,7 @@
           "I wonder a lot what I really need in a relationship. And I don’t think I still know it yet. But I want you to be the one who can explore with me together. Realistically, we all want to spend the rest of our lives somewhere else in this world. So logically, we can build a future together. I am not the best girlfriend in the world; I have a confusing temper sometimes, and I may expect you to do something even though that might not be your thing to do…long distance may magnify some of the others too. But I want us to keep open conversation all the time, and try not to hide any secrets from each other.",
           "And don’t pressure yourself and worry too much about having to make it to London. Remember life is unpredictable, so go with the flow, but do try your best for things you want in life instead of watching them pass by you. I love you so much, and I can’t wait to explore more of life with you!"
         ],
-        "signoff": "Love,",
+        "signoff": "With love,",
         "signName": "Lorina"
       },
       "panel": {
@@ -73,13 +66,6 @@
       "title": "Because you always knew the soft way out",
       "passkey": "SoftSunlight",
       "seal": "M&L",
-      "song": {
-        "title": "Song for Maya",
-        "artist": "Memory soundtrack",
-        "file": "assets/audio/maya-song.wav",
-        "playLabel": "Play memory soundtrack",
-        "pauseLabel": "Pause soundtrack"
-      },
       "letter": {
         "opener": "You always knew the soft way out — the door that let the light in, the sentence that ended the argument before it began.",
         "paragraphs": [
@@ -121,13 +107,6 @@
       "title": "Home was never an address",
       "passkey": "AlwaysHome",
       "seal": "M",
-      "song": {
-        "title": "Song for Mom",
-        "artist": "Memory soundtrack",
-        "file": "assets/audio/mom-song.wav",
-        "playLabel": "Play memory soundtrack",
-        "pauseLabel": "Pause soundtrack"
-      },
       "letter": {
         "opener": "Home was never an address. It was the lamp left on, the door unlocked, the way you said come in before I even knocked.",
         "paragraphs": [
@@ -184,8 +163,13 @@
       "missingBoard": "Memories for this letter aren’t on the board yet — the words are still yours to open."
     },
     "letter": {
-      "asideLabel": "yours to keep",
       "another": "Another letter"
     }
+  },
+  "soundtrack": {
+    "title": "Tides in the Parlor",
+    "file": "assets/audio/Tides_in_the_Parlor.mp3",
+    "playLabel": "Play memory soundtrack",
+    "pauseLabel": "Pause soundtrack"
   }
 }
