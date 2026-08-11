@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page 4 preview — individual flower cutouts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Reenie+Beanie&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #FBEFD9;
+      --ink: #3A322B;
+      --blush: #F6D4D9;
+      --rose: #E9A7B4;
+      --seal-red: #8B2E2E;
+      --seal-red-deep: #6E2424;
+      --open-letter-red: #9E413C;
+      --seal-surface:
+        radial-gradient(120% 90% at 50% 40%, rgba(0, 0, 0, 0.08), transparent 55%),
+        linear-gradient(160deg, var(--seal-red) 0%, var(--seal-red-deep) 100%);
+      --type-ink: #3A322B;
+      --type-ink-warm: #4A342C;
+      --type-on-seal: #F7E8D4;
+      --serif: "Cormorant Garamond", Garamond, "Times New Roman", serif;
+      --sans: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --hand: "Reenie Beanie", cursive;
+      /* Soft paper lift — keep light so it follows bloom silhouette, not a box */
+      --floral-shadow: drop-shadow(0 4px 10px rgba(20, 8, 8, 0.22));
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--type-on-seal);
+      background: #2a1818;
+    }
+    .note {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 22px 18px 10px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(247, 232, 212, 0.78);
+    }
+    .note h1 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      margin: 0 0 8px;
+      color: #F7E8D4;
+    }
+    .note code { font-size: 12px; color: #F2D06B; }
+
+    .letter-view {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      background: var(--seal-surface);
+      padding: clamp(36px, 6vh, 64px) clamp(16px, 4vw, 40px) 56px;
+    }
+    .seal-script {
+      position: absolute;
+      inset: -8%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      opacity: 0.22;
+      transform: rotate(-4deg);
+    }
+    .seal-script p {
+      font-family: var(--hand);
+      font-size: clamp(28px, 4.2vw, 42px);
+      line-height: 1.55;
+      color: #1a1210;
+      white-space: nowrap;
+      margin: 0 0 0.35em;
+      letter-spacing: 0.02em;
+    }
+    .seal-script p:nth-child(2) { margin-left: -8%; opacity: 0.85; }
+    .seal-script p:nth-child(3) { margin-left: 4%; opacity: 0.7; }
+
+    .stage {
+      position: relative;
+      z-index: 2;
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 8px 0 12px;
+    }
+
+    .floral-frame {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .floral-frame picture { display: contents; }
+    .floral {
+      position: absolute;
+      display: block;
+      height: auto;
+      max-width: none;
+      filter: var(--floral-shadow);
+      opacity: 0.72;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* Desktop — blooms in gutters around a wider centered letter */
+    .fl-2b {
+      left: 0;
+      top: 0;
+      width: 72px;
+      transform: rotate(-18deg);
+      opacity: 0.78;
+    }
+    .fl-1c {
+      left: 1.5%;
+      top: 24%;
+      width: 56px;
+      transform: rotate(12deg);
+      opacity: 0.68;
+    }
+    .fl-2a {
+      left: 0;
+      top: 46%;
+      width: 92px;
+      transform: rotate(-8deg) scaleX(-1);
+      opacity: 0.6;
+    }
+    .fl-1e {
+      left: 1%;
+      bottom: 5%;
+      width: 86px;
+      transform: rotate(16deg);
+      opacity: 0.66;
+    }
+    .fl-2d {
+      left: 4%;
+      bottom: 30%;
+      width: 66px;
+      transform: rotate(-22deg);
+      opacity: 0.52;
+    }
+    .fl-1b {
+      right: 0;
+      top: 0;
+      width: 88px;
+      transform: rotate(10deg);
+      opacity: 0.62;
+    }
+    .fl-2c {
+      right: 0.5%;
+      top: 28%;
+      width: 62px;
+      transform: rotate(-14deg);
+      opacity: 0.7;
+    }
+    .fl-1d {
+      right: 1%;
+      top: 54%;
+      width: 74px;
+      transform: rotate(20deg);
+      opacity: 0.56;
+    }
+    .fl-2f {
+      right: 0;
+      bottom: 4%;
+      width: 116px;
+      transform: rotate(-6deg);
+      opacity: 0.72;
+    }
+    .fl-1a {
+      right: 4%;
+      bottom: 24%;
+      width: 96px;
+      transform: rotate(8deg);
+      opacity: 0.58;
+    }
+    .fl-2e {
+      left: 5%;
+      top: 3%;
+      width: 72px;
+      transform: rotate(-28deg);
+      opacity: 0.48;
+    }
+
+    /* ~65–80 char measure at 18px serif; cap so large monitors don't overstretch */
+    .reading {
+      position: relative;
+      z-index: 3;
+      width: min(790px, 84%);
+      max-width: 800px;
+      margin: 36px auto 0;
+    }
+
+    .paper-card {
+      position: relative;
+      border-radius: 3px 7px 9px 5px;
+      transform: rotate(-0.4deg);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 42%),
+        linear-gradient(180deg, #FFF8EC 0%, #F7EFE0 45%, #EDE0C8 100%);
+      box-shadow:
+        0 24px 48px rgba(20, 8, 8, 0.38),
+        0 8px 18px rgba(58, 50, 43, 0.16),
+        0 0 0 1.75px rgba(40, 28, 24, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      color: var(--type-ink);
+      padding:
+        clamp(28px, 3vw, 38px)
+        clamp(34px, 3.8vw, 42px)
+        clamp(26px, 2.8vw, 34px);
+    }
+    .paper-card-grain {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: 0.32;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      background-image:
+        radial-gradient(rgba(58, 50, 43, 0.08) 0.8px, transparent 1px),
+        radial-gradient(rgba(90, 60, 50, 0.06) 1px, transparent 1.5px);
+      background-size: 3px 3px, 7px 7px;
+    }
+    .paper-card > *:not(.paper-card-grain) { position: relative; z-index: 1; }
+
+    .film {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 44px;
+      background: none;
+      border: none;
+      padding: 4px 0;
+      margin-bottom: 12px;
+      color: var(--type-ink-warm);
+      cursor: pointer;
+    }
+    .film-strip {
+      position: relative;
+      width: 78px;
+      height: 30px;
+      flex: 0 0 auto;
+      border-radius: 3px;
+      background: repeating-linear-gradient(90deg, #1c221e 0 10px, #2c342e 10px 14px);
+      box-shadow: 0 4px 10px rgba(58, 50, 43, 0.15);
+    }
+    .film-strip::before,
+    .film-strip::after {
+      content: "";
+      position: absolute;
+      top: -3px; bottom: -3px; width: 5px;
+      background: repeating-linear-gradient(#FBEFD9 0 3px, transparent 3px 6px);
+      opacity: 0.85;
+    }
+    .film-strip::before { left: 3px; }
+    .film-strip::after { right: 3px; }
+    .film-disc {
+      position: absolute;
+      right: -2px; top: 50%;
+      width: 28px; height: 28px;
+      margin-top: -14px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, #FBEFD9 0 4px, transparent 5px),
+        repeating-conic-gradient(from 0deg, #1c221e 0deg 18deg, #3a443c 18deg 36deg);
+      box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--open-letter-red) 55%, transparent);
+    }
+    .film span {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+    }
+    .film:hover span,
+    .film:focus-visible span { color: var(--open-letter-red); }
+
+    .letter-title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(28px, 3.8vw, 40px);
+      line-height: 1.08;
+      color: var(--open-letter-red);
+      margin: 0 0 18px;
+    }
+    .title-mark {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 8px;
+      border-radius: 60% 40% 55% 45%;
+      background: var(--open-letter-red);
+      opacity: 0.75;
+      vertical-align: 0.35em;
+    }
+    .letter-body p {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--type-ink);
+      margin: 0 0 1.05em;
+      /* Soft cap (~65–80 avg characters at this size) */
+      max-width: 74ch;
+    }
+    .signoff {
+      margin-top: 22px;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--open-letter-red);
+    }
+    .sign-name {
+      display: block;
+      font-family: var(--hand);
+      font-style: normal;
+      font-size: 36px;
+      color: var(--type-ink);
+      line-height: 1;
+      margin-top: 4px;
+    }
+    .accent-rule {
+      width: 42px;
+      height: 2px;
+      margin: 18px 0 0;
+      background: color-mix(in srgb, var(--open-letter-red) 70%, transparent);
+      border-radius: 2px;
+    }
+    .another {
+      position: relative;
+      z-index: 3;
+      margin-top: 22px;
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 17px;
+      color: var(--type-on-seal);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    /* Tablet — keep ~65ch measure; corner blooms above/below card (side gutters too thin) */
+    @media (max-width: 900px) {
+      .letter-view {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .stage {
+        padding-bottom: 64px;
+      }
+      .fl-2d,
+      .fl-1d,
+      .fl-2e,
+      .fl-1a,
+      .fl-1c,
+      .fl-2a,
+      .fl-2c { display: none; }
+      .fl-2b {
+        left: 1%;
+        top: 2px;
+        width: 48px;
+        transform: rotate(-16deg);
+      }
+      .fl-1e {
+        left: 2%;
+        top: auto;
+        bottom: 4px;
+        width: 58px;
+        transform: rotate(10deg);
+      }
+      .fl-1b {
+        right: 1%;
+        top: 2px;
+        width: 54px;
+        transform: rotate(14deg);
+      }
+      .fl-2f {
+        right: 2%;
+        top: auto;
+        bottom: 2px;
+        width: 92px;
+        transform: rotate(-10deg);
+      }
+      .reading {
+        width: min(720px, 100%);
+        max-width: 720px;
+        margin-top: 58px;
+        margin-bottom: 8px;
+      }
+      .paper-card {
+        padding: 28px 34px 26px;
+      }
+    }
+
+    /* Mobile — full available width, comfortable side margins via view padding */
+    @media (max-width: 640px) {
+      .letter-view { padding: 20px 14px 36px; }
+      .floral { display: none; }
+      .fl-2b,
+      .fl-1e,
+      .fl-2f {
+        display: block;
+      }
+      /* Keep blooms in the top/bottom chrome only — never under the card */
+      .fl-2b {
+        left: 2%;
+        top: 4px;
+        width: 52px;
+        transform: rotate(-14deg);
+        opacity: 0.7;
+      }
+      .fl-1e {
+        left: auto;
+        right: 6%;
+        top: auto;
+        bottom: 28px;
+        width: 58px;
+        transform: rotate(12deg);
+        opacity: 0.62;
+      }
+      .fl-2f {
+        left: 4%;
+        right: auto;
+        top: auto;
+        bottom: 22px;
+        width: 84px;
+        transform: rotate(-8deg);
+        opacity: 0.58;
+      }
+      .reading {
+        width: 100%;
+        max-width: none;
+        margin-top: 64px;
+        margin-bottom: 72px;
+      }
+      .paper-card {
+        transform: none;
+        padding: 22px 20px 20px;
+      }
+      .letter-body p {
+        font-size: 17px;
+        max-width: none;
+      }
+      .another { margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="note">
+    <h1>Page 4 preview — wider reading measure</h1>
+    <p>
+      Letter card up to <code>800px</code> / body capped at <code>74ch</code> (~65 characters at desktop).
+      Florals in side gutters on desktop; corner frame on tablet. Accent <code>--open-letter-red: #9E413C</code>.
+    </p>
+  </div>
+
+  <section class="letter-view" aria-label="Page 4 letter preview">
+    <div class="seal-script" aria-hidden="true">
+      <p>have loved you · forms numberless · keep this close · no matter how far · summer light · with love · stay with you · handwritten days · soft mornings · for you always · have loved you · forms numberless · keep this close · no matter how far · summer light · with love · stay with you · handwritten days · soft mornings · for you always</p>
+      <p>forms numberless · have loved you · stay with you · keep this close · with love · summer light · no matter how far · soft mornings · for you always · handwritten days · forms numberless · have loved you · stay with you · keep this close · with love · summer light · no matter how far · soft mornings · for you always</p>
+      <p>keep this close · with love · have loved you · forms numberless · summer light · stay with you · no matter how far · for you always · soft mornings · handwritten days · keep this close · with love · have loved you · forms numberless · summer light · stay with you · no matter how far · for you always</p>
+    </div>
+
+    <div class="stage">
+      <div class="floral-frame" aria-hidden="true">
+        <picture>
+          <source srcset="assets/img/flowers/flower2-b.webp?v=8" type="image/webp" />
+          <img class="floral fl-2b" src="assets/img/flowers/flower2-b.png?v=8" alt="" width="262" height="380" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower2-e.webp?v=8" type="image/webp" />
+          <img class="floral fl-2e" src="assets/img/flowers/flower2-e.png?v=8" alt="" width="380" height="357" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower1-c.webp?v=8" type="image/webp" />
+          <img class="floral fl-1c" src="assets/img/flowers/flower1-c.png?v=8" alt="" width="210" height="380" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower2-a.webp?v=8" type="image/webp" />
+          <img class="floral fl-2a" src="assets/img/flowers/flower2-a.png?v=8" alt="" width="380" height="362" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower1-e.webp?v=8" type="image/webp" />
+          <img class="floral fl-1e" src="assets/img/flowers/flower1-e.png?v=8" alt="" width="380" height="332" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower2-d.webp?v=8" type="image/webp" />
+          <img class="floral fl-2d" src="assets/img/flowers/flower2-d.png?v=8" alt="" width="380" height="372" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower1-b.webp?v=8" type="image/webp" />
+          <img class="floral fl-1b" src="assets/img/flowers/flower1-b.png?v=8" alt="" width="371" height="380" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower2-c.webp?v=8" type="image/webp" />
+          <img class="floral fl-2c" src="assets/img/flowers/flower2-c.png?v=8" alt="" width="282" height="380" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower1-d.webp?v=8" type="image/webp" />
+          <img class="floral fl-1d" src="assets/img/flowers/flower1-d.png?v=8" alt="" width="336" height="380" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower2-f.webp?v=8" type="image/webp" />
+          <img class="floral fl-2f" src="assets/img/flowers/flower2-f.png?v=8" alt="" width="380" height="145" decoding="async" />
+        </picture>
+        <picture>
+          <source srcset="assets/img/flowers/flower1-a.webp?v=8" type="image/webp" />
+          <img class="floral fl-1a" src="assets/img/flowers/flower1-a.png?v=8" alt="" width="380" height="155" decoding="async" />
+        </picture>
+      </div>
+
+      <div class="reading">
+        <article class="paper-card">
+          <div class="paper-card-grain" aria-hidden="true"></div>
+          <button type="button" class="film" aria-label="Play memory soundtrack">
+            <span class="film-strip"><span class="film-disc" aria-hidden="true"></span></span>
+            <span>Play memory soundtrack</span>
+          </button>
+          <h1 class="letter-title"><span class="title-mark" aria-hidden="true"></span>A letter for Adi</h1>
+          <div class="letter-body">
+            <p>Today is July 5th; it’s a very random Sunday. The weather outside is very gloomy, with a sea salt breeze I really love. It’s 26 degrees temperature-wise. And I am listening to Taylor Swift’s “Champagne Problems” on repeat.</p>
+            <p>Well, I did plan to write this letter today as one of my Notion tasks, but I didn’t really know when I opened my laptop and felt like the right time to write it.</p>
+            <p>This is going to be very messy writing since I am not really using AI. So do bear with me not having the optimized words or logic.</p>
+          </div>
+          <div class="accent-rule" aria-hidden="true"></div>
+          <p class="signoff">With love,<span class="sign-name">Lorina</span></p>
+        </article>
+      </div>
+    </div>
+    <p class="another">Another letter</p>
+  </section>
+</body>
+</html>
