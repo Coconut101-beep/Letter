@@ -86,7 +86,7 @@ def main() -> int:
             "-- select f.username, l.title, l.is_locked, jsonb_array_length(l.paragraphs) as paras",
             "-- from public.letters l join public.friends f on f.id = l.friend_id",
             "-- where f.username = 'adi';",
-            "-- select * from public.get_letter_for('adi', 'MyBestBoyfriend');",
+            "-- select * from public.get_letter_for('adi', 'ExamplePasskey123');",
             "",
         ]
     )

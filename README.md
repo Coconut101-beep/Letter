@@ -13,17 +13,11 @@ Single `index.html` with JS view switching:
 3. **Memories** — dark collage board (polaroids, film strip, ticket, stickers)
 4. **Letter + music** — letter body, supporting panel, film-reel soundtrack toggle
 
-## Content is data, not code
+## Content
 
-Edit `data/letters.json` only — people, passkeys, letter copy, songs, and memory manifests. Drop media into `assets/img/<person>/` and `assets/audio/`.
+Letter text, passkeys, and per-person media live in Supabase (not in this repo). Passkeys are stored as bcrypt hashes and shared privately with each recipient.
 
-### Sample passkeys
-
-| Name | Passkey |
-|------|---------|
-| Adi  | MyBestBoyfriend |
-| Maya | SoftSunlight |
-| Mom  | AlwaysHome |
+UI chrome strings for the pre-login pages are in `data/letters.json`. Drop media into private Supabase Storage (`letter-media` bucket).
 
 ## Local serve
 

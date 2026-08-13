@@ -25,7 +25,7 @@ python3 scripts/generate_supabase_seed.py
 6. **Verify** (SQL Editor):
 
 ```sql
-select * from public.get_letter_for('adi', 'MyBestBoyfriend');
+select * from public.get_letter_for('adi', 'ExamplePasskey123');
 ```
 
 ## Schema overview

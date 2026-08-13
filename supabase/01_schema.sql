@@ -114,7 +114,7 @@ revoke all on public.app_settings from anon, authenticated;
 
 -- ============================================================
 -- 7. hash_passkey — bcrypt via pgcrypto (extensions schema)
---   select public.hash_passkey('MyBestBoyfriend');
+--   select public.hash_passkey('ExamplePasskey123');
 -- ============================================================
 create or replace function public.hash_passkey(plain text)
 returns text
