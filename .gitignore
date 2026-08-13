@@ -10,3 +10,4 @@ _writetest.txt
 # Raw per-person dumps at repo root (HEIC/docx) — not assets/img/adi/
 /Adi/
 
+supabase/.temp/
