@@ -4,6 +4,11 @@
 
   const CACHE = "20260812c";
   const DATA_URL = `data/letters.json?v=${CACHE}`;
+  /** Set to your Supabase project URL and anon key (public; safe in front-end). */
+  const SUPABASE_URL = "https://ytcpqzxcwmvasnswenys.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_jJu3rG1Wf_M3-H0PKyco0w_Ps8GUhqC";
+  const LOCKED_MSG =
+    "Your letter isn't ready yet — but it will be waiting for you when the time comes.";
   const SHARED_SONG = {
     file: "assets/audio/Tides_in_the_Parlor.mp3",
     playLabel: "Play memory soundtrack",
@@ -139,6 +144,124 @@
       }
     }
     return null;
+  }
+
+  function supabaseConfigured() {
+    return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+  }
+
+  async function fetchLetterFromApi(name, passkey) {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/get-letter`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({ name, passkey }),
+    });
+    let data = null;
+    try {
+      data = await res.json();
+    } catch (_) {
+      /* non-JSON body */
+    }
+    return { status: res.status, data };
+  }
+
+  function mergeApiSettings(settings) {
+    if (!settings || typeof settings !== "object") return;
+    state.data = state.data || { people: {}, copy: {} };
+    if (settings.meta && typeof settings.meta === "object") {
+      Object.assign(state.data, settings.meta);
+    }
+    if (settings.copy) {
+      state.data.copy = { ...(state.data.copy || {}), ...settings.copy };
+    }
+    if (settings.soundtrack) {
+      state.data.soundtrack = settings.soundtrack;
+    }
+    applySharedCopy();
+  }
+
+  function mediaSignedUrl(media, opts) {
+    const items = Array.isArray(media) ? media : [];
+    if (opts.mediaKey) {
+      const hit = items.find((m) => m.media_key === opts.mediaKey);
+      return hit?.signed_url || null;
+    }
+    const hit = items.find((m) => m.metadata?.role === opts.role);
+    return hit?.signed_url || null;
+  }
+
+  function personFromApi(payload) {
+    const { friend, letter, media } = payload;
+    const scratchMeta = (letter && letter.scratchboard) || {};
+    const webpUrl = mediaSignedUrl(media, { mediaKey: "board-webp" });
+    const jpgUrl = mediaSignedUrl(media, { mediaKey: "board-jpg" });
+    const songUrl = mediaSignedUrl(media, { mediaKey: "song" });
+
+    if (songUrl) {
+      state.data = state.data || {};
+      state.data.soundtrack = {
+        ...(state.data.soundtrack || SHARED_SONG),
+        file: songUrl,
+      };
+    }
+
+    return {
+      key: friend.username,
+      person: {
+        name: friend.display_name,
+        title: letter.title,
+        greeting: letter.greeting,
+        seal: friend.seal,
+        letter: {
+          opener: letter.opener,
+          paragraphs: letter.paragraphs,
+          signoff: letter.signoff,
+          signName: letter.sign_name,
+        },
+        scratchboard: {
+          ...scratchMeta,
+          imageWebp: webpUrl,
+          imageJpg: jpgUrl || webpUrl,
+          image: scratchMeta.image || null,
+        },
+      },
+    };
+  }
+
+  function lockedMessage(unlockDate) {
+    let msg = LOCKED_MSG;
+    if (!unlockDate) return msg;
+    const d = new Date(unlockDate);
+    if (!Number.isNaN(d.getTime())) {
+      msg += ` Check back after ${d.toLocaleDateString(undefined, { dateStyle: "long" })}.`;
+    }
+    return msg;
+  }
+
+  function showPasskeyError(form, errEl, message, { shake = true, locked = false } = {}) {
+    if (form) {
+      form.classList.remove("is-shake");
+      if (shake) {
+        void form.offsetWidth;
+        form.classList.add("is-shake");
+      }
+    }
+    if (errEl) {
+      errEl.hidden = false;
+      errEl.textContent = message;
+      errEl.classList.toggle("is-locked", locked);
+    }
+  }
+
+  function clearPasskeyError(errEl) {
+    if (!errEl) return;
+    errEl.hidden = true;
+    errEl.textContent = "";
+    errEl.classList.remove("is-locked");
   }
 
   /* ---------- Shared UI copy (from data.copy) ---------- */
@@ -332,7 +455,12 @@
     if (reveal) reveal.hidden = false;
 
     const base = board.image;
-    const hasBoard = typeof base === "string" && base.length > 0;
+    const webpUrl = board.imageWebp;
+    const jpgUrl = board.imageJpg;
+    const hasBoard =
+      (typeof webpUrl === "string" && webpUrl.length > 0) ||
+      (typeof jpgUrl === "string" && jpgUrl.length > 0) ||
+      (typeof base === "string" && base.length > 0);
 
     if (!hasBoard) {
       stage.classList.add("is-missing");
@@ -358,10 +486,18 @@
 
     if (missing) missing.hidden = true;
     if (picture) picture.hidden = false;
-    if (webp) webp.srcset = bust(`${base}.webp`);
-    if (img) {
-      img.src = bust(`${base}.jpg`);
-      img.alt = board.alt || `Memories for ${person.name || "you"}`;
+    if (webpUrl || jpgUrl) {
+      if (webp) webp.srcset = webpUrl || "";
+      if (img) {
+        img.src = jpgUrl || webpUrl || "";
+        img.alt = board.alt || `Memories for ${person.name || "you"}`;
+      }
+    } else {
+      if (webp) webp.srcset = bust(`${base}.webp`);
+      if (img) {
+        img.src = bust(`${base}.jpg`);
+        img.alt = board.alt || `Memories for ${person.name || "you"}`;
+      }
     }
 
     if (!window.ScratchBoard || !canvas) {
@@ -665,23 +801,59 @@
       if (!state.data) await loadData();
       const name = $("input-name").value;
       const pass = $("input-passkey").value;
+
+      if (supabaseConfigured()) {
+        try {
+          const { status, data } = await fetchLetterFromApi(name, pass);
+
+          if (data?.ok === true) {
+            mergeApiSettings(data.settings);
+            const mapped = personFromApi(data);
+            clearPasskeyError(err);
+            state.personKey = mapped.key;
+            state.person = mapped.person;
+            openMemories(mapped.person);
+            return;
+          }
+
+          if (data?.ok === false && data.reason === "locked") {
+            showPasskeyError(form, err, lockedMessage(data.unlock_date), {
+              shake: false,
+              locked: true,
+            });
+            return;
+          }
+
+          if (status === 401 || (data?.ok === false && data.error)) {
+            showPasskeyError(
+              form,
+              err,
+              (copy().passkey && copy().passkey.error) ||
+                "That name and passkey don’t match. Try again?"
+            );
+            return;
+          }
+
+          if (data?.error) {
+            showPasskeyError(form, err, data.error, { shake: false });
+            return;
+          }
+        } catch (apiErr) {
+          console.warn("get-letter failed, falling back to letters.json", apiErr);
+        }
+      }
+
       const found = findPerson(name, pass);
       if (!found) {
-        form.classList.remove("is-shake");
-        void form.offsetWidth;
-        form.classList.add("is-shake");
-        if (err) {
-          err.hidden = false;
-          err.textContent =
-            (copy().passkey && copy().passkey.error) ||
-            "That name and passkey don’t match. Try again?";
-        }
+        showPasskeyError(
+          form,
+          err,
+          (copy().passkey && copy().passkey.error) ||
+            "That name and passkey don’t match. Try again?"
+        );
         return;
       }
-      if (err) {
-        err.hidden = true;
-        err.textContent = "";
-      }
+      clearPasskeyError(err);
       state.personKey = found.key;
       state.person = found.person;
       openMemories(found.person);
