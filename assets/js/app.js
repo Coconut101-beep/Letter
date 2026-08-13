@@ -9,6 +9,8 @@
   const SUPABASE_ANON_KEY = "sb_publishable_jJu3rG1Wf_M3-H0PKyco0w_Ps8GUhqC";
   const LOCKED_MSG =
     "Your letter isn't ready yet — but it will be waiting for you when the time comes.";
+  const UNAVAILABLE_MSG =
+    "The letter box is having a quiet moment — please try again in a little while.";
   const SHARED_SONG = {
     file: "assets/audio/Tides_in_the_Parlor.mp3",
     playLabel: "Play memory soundtrack",
@@ -128,22 +130,6 @@
       state.data = null;
     }
     return state.data;
-  }
-
-  function findPerson(name, passkey) {
-    if (!state.data || !state.data.people) return null;
-    const n = norm(name);
-    const p = norm(passkey);
-    const entries = Object.entries(state.data.people);
-    for (const [key, person] of entries) {
-      const names = [person.name, key]
-        .concat(person.aliases || [])
-        .map(norm);
-      if (names.includes(n) && norm(person.passkey) === p) {
-        return { key, person };
-      }
-    }
-    return null;
   }
 
   function supabaseConfigured() {
@@ -798,65 +784,55 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      if (!state.data) await loadData();
       const name = $("input-name").value;
       const pass = $("input-passkey").value;
 
-      if (supabaseConfigured()) {
-        try {
-          const { status, data } = await fetchLetterFromApi(name, pass);
-
-          if (data?.ok === true) {
-            mergeApiSettings(data.settings);
-            const mapped = personFromApi(data);
-            clearPasskeyError(err);
-            state.personKey = mapped.key;
-            state.person = mapped.person;
-            openMemories(mapped.person);
-            return;
-          }
-
-          if (data?.ok === false && data.reason === "locked") {
-            showPasskeyError(form, err, lockedMessage(data.unlock_date), {
-              shake: false,
-              locked: true,
-            });
-            return;
-          }
-
-          if (status === 401 || (data?.ok === false && data.error)) {
-            showPasskeyError(
-              form,
-              err,
-              (copy().passkey && copy().passkey.error) ||
-                "That name and passkey don’t match. Try again?"
-            );
-            return;
-          }
-
-          if (data?.error) {
-            showPasskeyError(form, err, data.error, { shake: false });
-            return;
-          }
-        } catch (apiErr) {
-          console.warn("get-letter failed, falling back to letters.json", apiErr);
-        }
-      }
-
-      const found = findPerson(name, pass);
-      if (!found) {
-        showPasskeyError(
-          form,
-          err,
-          (copy().passkey && copy().passkey.error) ||
-            "That name and passkey don’t match. Try again?"
-        );
+      if (!supabaseConfigured()) {
+        showPasskeyError(form, err, UNAVAILABLE_MSG, { shake: false });
         return;
       }
-      clearPasskeyError(err);
-      state.personKey = found.key;
-      state.person = found.person;
-      openMemories(found.person);
+
+      try {
+        const { status, data } = await fetchLetterFromApi(name, pass);
+
+        if (data?.ok === true) {
+          mergeApiSettings(data.settings);
+          const mapped = personFromApi(data);
+          clearPasskeyError(err);
+          state.personKey = mapped.key;
+          state.person = mapped.person;
+          openMemories(mapped.person);
+          return;
+        }
+
+        if (data?.ok === false && data.reason === "locked") {
+          showPasskeyError(form, err, lockedMessage(data.unlock_date), {
+            shake: false,
+            locked: true,
+          });
+          return;
+        }
+
+        if (status === 401 || (data?.ok === false && data.error)) {
+          showPasskeyError(
+            form,
+            err,
+            (copy().passkey && copy().passkey.error) ||
+              "That name and passkey don’t match. Try again?"
+          );
+          return;
+        }
+
+        if (data?.error) {
+          showPasskeyError(form, err, data.error, { shake: false });
+          return;
+        }
+
+        showPasskeyError(form, err, UNAVAILABLE_MSG, { shake: false });
+      } catch (apiErr) {
+        console.warn("get-letter failed", apiErr);
+        showPasskeyError(form, err, UNAVAILABLE_MSG, { shake: false });
+      }
     });
 
     if (back) {
@@ -893,29 +869,6 @@
     });
   }
 
-  /** Deep-link from Page 3 experiments: ?person=adi&view=letter */
-  async function handleDeepLink() {
-    const params = new URLSearchParams(window.location.search);
-    const personKey = norm(params.get("person"));
-    const view = norm(params.get("view"));
-    if (!personKey || !view) return false;
-    if (!state.data) await loadData();
-    const person = state.data?.people?.[personKey];
-    if (!person) return false;
-    state.personKey = personKey;
-    state.person = person;
-    if (view === "letter") {
-      buildLetter(person);
-      showView("letter");
-      return true;
-    }
-    if (view === "memories") {
-      openMemories(person);
-      return true;
-    }
-    return false;
-  }
-
   async function init() {
     if (!state.wired) {
       state.wired = true;
@@ -932,7 +885,6 @@
 
     await loadData();
     applySharedCopy();
-    await handleDeepLink();
   }
 
   window.Lorina = {

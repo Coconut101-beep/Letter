@@ -2,28 +2,28 @@
 -- Run AFTER 01_schema.sql, in Supabase → SQL Editor.
 -- Then run 03_seed_letters.sql (generated from data/letters.json).
 --
--- IMPORTANT: passkeys below are plaintext ONLY inside this script.
--- hash_passkey() converts them to bcrypt before insert.
--- Remove or redact passkeys after first run in production.
+-- Passkeys: real plaintext values were removed after the initial seed.
+-- See your password manager. Re-seeding passkeys requires the live values
+-- substituted back into hash_passkey('...') before running this script.
 
 -- ============================================================
 -- friends (13 recipients)
 -- ============================================================
 insert into public.friends (username, display_name, passkey_hash, seal, aliases)
 values
-  ('adi',     'Adi',     public.hash_passkey('MyBestBoyfriend'),       'L&M', array['adi']),
-  ('stacy',   'Stacy',   public.hash_passkey('小小钵钵鸡'),              'S&L', array['stacy']),
-  ('bunzel',  'Bunzel',  public.hash_passkey('MrGymBeast'),            'B&L', array['bunzel']),
-  ('sylvia',  'Sylvia',  public.hash_passkey('Butterfly'),             'S&L', array['sylvia']),
-  ('lucy',    'Lucy',    public.hash_passkey('Cheerstofuture'),        'L&L', array['lucy']),
-  ('josie',   'Josie',   public.hash_passkey('MyDancingMamacita'),     'J&L', array['josie']),
-  ('anson',   'Anson',   public.hash_passkey('MyAmericanBigBrother'),  'A&L', array['anson']),
-  ('david',   'David',   public.hash_passkey('GoodConversationHeals'), 'D&L', array['david']),
-  ('pardis',  'Pardis',  public.hash_passkey('MyBigSis'),              'P&L', array['pardis']),
-  ('hon',     'Hon',     public.hash_passkey('BestFriendForLife'),     'H&L', array['hon']),
-  ('amy',     'Amy',     public.hash_passkey('我最好的小老妹'),           'A&L', array['amy']),
-  ('momdad',  'Mom&Dad', public.hash_passkey('AlwaysHome'),            'M&D', array['mom','mum','mama','dad','妈妈','爸爸']),
-  ('yangran', '杨冉',     public.hash_passkey('中国近代杰出女小说家'),    'Y&L', array['yangran','杨冉'])
+  ('adi',     'Adi',     public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),       'L&M', array['adi']),
+  ('stacy',   'Stacy',   public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),              'S&L', array['stacy']),
+  ('bunzel',  'Bunzel',  public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),            'B&L', array['bunzel']),
+  ('sylvia',  'Sylvia',  public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),             'S&L', array['sylvia']),
+  ('lucy',    'Lucy',    public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),        'L&L', array['lucy']),
+  ('josie',   'Josie',   public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),     'J&L', array['josie']),
+  ('anson',   'Anson',   public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),  'A&L', array['anson']),
+  ('david',   'David',   public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'), 'D&L', array['david']),
+  ('pardis',  'Pardis',  public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),              'P&L', array['pardis']),
+  ('hon',     'Hon',     public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),     'H&L', array['hon']),
+  ('amy',     'Amy',     public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),           'A&L', array['amy']),
+  ('momdad',  'Mom&Dad', public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),            'M&D', array['mom','mum','mama','dad','妈妈','爸爸']),
+  ('yangran', '杨冉',     public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'),    'Y&L', array['yangran','杨冉'])
 on conflict (username) do update
   set display_name  = excluded.display_name,
       passkey_hash  = excluded.passkey_hash,
@@ -33,7 +33,7 @@ on conflict (username) do update
 
 -- Aunt — uncomment and set a passkey before enabling:
 -- insert into public.friends (username, display_name, passkey_hash, seal, aliases)
--- values ('aunt', 'Aunt', public.hash_passkey('SET_A_PASSKEY'), 'A&L', array['aunt'])
+-- values ('aunt', 'Aunt', public.hash_passkey('REDACTED_SEE_PASSWORD_MANAGER'), 'A&L', array['aunt'])
 -- on conflict (username) do update
 --   set display_name = excluded.display_name,
 --       passkey_hash = excluded.passkey_hash,
@@ -101,4 +101,4 @@ on conflict (letter_id, media_key) do update
 -- ============================================================
 -- select username, display_name from public.friends order by username;
 -- select f.username, l.slug, l.is_locked from public.letters l join public.friends f on f.id = l.friend_id;
--- select * from public.get_letter_for('adi', 'MyBestBoyfriend');
+-- select * from public.get_letter_for('adi', 'YOUR_PASSKEY');
