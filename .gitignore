@@ -7,6 +7,16 @@ _writetest.txt
 .venv/
 .venv-img/
 
+# Environment / secrets
+.env
+.env.local
+.env.*
+
+# Supabase local CLI artifacts and private seed backups
+supabase/.temp/
+supabase/02_seed.sql
+supabase/03_seed_letters.sql
+
 # Raw per-person dumps at repo root (HEIC/docx) — not assets/img/adi/
 /Adi/
-
+supabase/03_seed_letters.sql
