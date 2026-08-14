@@ -21,8 +21,20 @@ SQL scripts for the private letter backend. Run in **Supabase → SQL Editor** i
 python3 scripts/generate_supabase_seed.py
 ```
 
-5. **Storage** — create a private bucket `letter-media` and upload paths referenced in `02_seed.sql` (Adi photos, scratchboard, shared soundtrack).
-6. **Verify** (SQL Editor):
+5. **Storage** — private bucket `letter-media`, then upload Adi files:
+
+```bash
+# One-time: create .env locally (gitignored) with:
+# SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+# SUPABASE_SERVICE_ROLE_KEY=...   (Dashboard → Settings → API → service_role)
+
+python3 scripts/upload_letter_media.py
+```
+
+Or upload manually in **Storage → letter-media** matching paths in `02_seed.sql`.
+
+6. **Verify** — curl or browser login; `media[].signed_url` should be HTTPS URLs, not `null`.
+7. **Verify SQL** (SQL Editor):
 
 ```sql
 select * from public.get_letter_for('adi', 'ExamplePasskey123');

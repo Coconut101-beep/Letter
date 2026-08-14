@@ -212,7 +212,8 @@
           ...scratchMeta,
           imageWebp: webpUrl,
           imageJpg: jpgUrl || webpUrl,
-          image: scratchMeta.image || null,
+          /* Prefer signed URLs; drop public assets/img path once Storage is populated */
+          image: webpUrl || jpgUrl ? null : scratchMeta.image || null,
         },
       },
     };
