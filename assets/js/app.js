@@ -905,6 +905,8 @@
   window.Lorina = {
     init,
     openSeal,
+    openMemories,
+    buildMemories,
     showView,
     clearPasskeyFields,
     state,

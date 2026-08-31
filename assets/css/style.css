@@ -53,7 +53,7 @@
   --zh-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
   --maxw: 1100px;
   --measure: 65ch;
-  --cache: 20260831b;
+  --cache: 20260901a;
   --floral-shadow: drop-shadow(0 4px 10px rgba(20, 8, 8, 0.22));
 
   /* Surfaces */
@@ -100,32 +100,7 @@
   --type-link-lh: 1.3;
   --type-link-style: italic;
 
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #2A2520;
-    --paper-2: #1F1B17;
-    --ink: #F0E6D8;
-    --ink-soft: #C4B8A8;
-    --ink-faint: rgba(240, 230, 216, 0.14);
-    --blush: #5C3D45;
-    --rose: #8E5A66;
-    --lemon: #8A7340;
-    --board: #141A16;
-    --cream-card: #332E28;
-    --letter-surface: #2E2924;
-    --type-ink: #F0E6D8;
-    --type-ink-warm: #E8DCC8;
-    --type-ink-soft: #C4B8A8;
-    --page-bg: linear-gradient(165deg, #1A1714 0%, #2A2520 45%, #1F1B17 100%);
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.24);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.32);
-    --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.48);
-    color-scheme: dark;
-  }
+  color-scheme: light only;
 }
 
 /* Shared type utilities — use on both seal + passkey surfaces */
