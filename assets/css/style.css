@@ -1,5 +1,6 @@
 /* Letters from Lorina — soft-editorial, pushed vintage / intimate / warm */
 :root {
+  /* —— Color palette —— */
   --paper: #FBEFD9;
   --paper-2: #F3E4C4;
   --ink: #3A322B;
@@ -10,21 +11,54 @@
   --lemon: #F2D06B;
   --board: #222B24;
   --cream-card: #FFF8EC;
+  --open-letter-red: #9E413C;
+  --seal-red: #8B2E2E;
+  --seal-red-deep: #6E2424;
+
+  /* —— Spacing scale —— */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* —— Radius —— */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* —— Shadows —— */
+  --shadow-sm: 0 2px 8px rgba(58, 50, 43, 0.08);
+  --shadow-md: 0 8px 24px rgba(58, 50, 43, 0.12);
+  --shadow-lg: 0 18px 40px rgba(20, 8, 8, 0.22);
+  --shadow-xl: 0 24px 48px rgba(20, 8, 8, 0.38);
+  --shadow-inset-soft: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+  /* —— Motion —— */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 250ms;
+  --ease-heart: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* —— Typography —— */
   --serif: "Cormorant Garamond", Garamond, "Times New Roman", serif;
   --sans: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --hand: "Reenie Beanie", "Caveat", cursive;
-  --ease-heart: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
-  --maxw: 1100px;
-  --cache: 20260812c;
-  --open-letter-red: #9E413C;
-  --floral-shadow: drop-shadow(0 4px 10px rgba(20, 8, 8, 0.22));
-  /* Flat Page 4 letter surface — same vintage cream as --paper, no white / no gradient */
-  --letter-surface: #FBEFD9;
   --zh-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
-  /* Shared Page 1 / Page 2 surface (exact same treatment) */
-  --seal-red: #8B2E2E;
-  --seal-red-deep: #6E2424;
+  --maxw: 1100px;
+  --measure: 65ch;
+  --cache: 20260831b;
+  --floral-shadow: drop-shadow(0 4px 10px rgba(20, 8, 8, 0.22));
+
+  /* Surfaces */
+  --letter-surface: #FBEFD9;
+  --page-bg: linear-gradient(165deg, #FDF6EA 0%, var(--paper) 42%, var(--paper-2) 100%);
   --seal-surface:
     radial-gradient(120% 90% at 50% 40%, rgba(0, 0, 0, 0.08), transparent 55%),
     linear-gradient(160deg, var(--seal-red) 0%, var(--seal-red-deep) 100%);
@@ -65,6 +99,33 @@
   --type-link-size: 17px;
   --type-link-lh: 1.3;
   --type-link-style: italic;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #2A2520;
+    --paper-2: #1F1B17;
+    --ink: #F0E6D8;
+    --ink-soft: #C4B8A8;
+    --ink-faint: rgba(240, 230, 216, 0.14);
+    --blush: #5C3D45;
+    --rose: #8E5A66;
+    --lemon: #8A7340;
+    --board: #141A16;
+    --cream-card: #332E28;
+    --letter-surface: #2E2924;
+    --type-ink: #F0E6D8;
+    --type-ink-warm: #E8DCC8;
+    --type-ink-soft: #C4B8A8;
+    --page-bg: linear-gradient(165deg, #1A1714 0%, #2A2520 45%, #1F1B17 100%);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.24);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.32);
+    --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.48);
+    color-scheme: dark;
+  }
 }
 
 /* Shared type utilities — use on both seal + passkey surfaces */
@@ -122,7 +183,8 @@ html, body { margin: 0; padding: 0; min-height: 100%; }
 /* Avoid document-wide smooth scrolling — it fights touch momentum on mobile */
 html { scroll-behavior: auto; }
 body {
-  background: var(--paper);
+  background: var(--page-bg);
+  background-color: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
   font-size: 17px;
@@ -169,17 +231,22 @@ h1, h2, h3, p { margin: 0; }
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 400ms var(--ease-soft);
+  transform: translateY(6px);
+  transition:
+    opacity var(--duration-slow) var(--ease-soft),
+    transform var(--duration-slow) var(--ease-soft),
+    visibility var(--duration-slow);
 }
 .view.is-active {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transform: translateY(0);
 }
-.view.is-entering { animation: viewIn 400ms var(--ease-soft) both; }
+.view.is-entering { animation: viewIn var(--duration-slow) var(--ease-soft) both; }
 @keyframes viewIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ---------- Shared UI ---------- */
@@ -188,7 +255,7 @@ h1, h2, h3, p { margin: 0; }
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 10px 22px;
   font-family: var(--type-btn-family);
   font-size: var(--type-btn-size);
@@ -196,20 +263,33 @@ h1, h2, h3, p { margin: 0; }
   line-height: var(--type-btn-lh);
   letter-spacing: var(--type-btn-tracking);
   text-transform: none;
-  transition: transform 200ms var(--ease-soft), box-shadow 200ms, filter 200ms;
+  transition:
+    transform var(--duration-normal) var(--ease-soft),
+    box-shadow var(--duration-normal) var(--ease-soft),
+    filter var(--duration-normal) var(--ease-soft),
+    background var(--duration-fast) var(--ease-soft);
 }
-.btn:hover { transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+}
+.btn:active { transform: translateY(0); filter: none; }
+.btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--rose) 65%, transparent);
+  outline-offset: 3px;
+}
 .btn-lemon {
   background: var(--lemon);
   color: var(--type-ink);
-  box-shadow: 0 8px 24px rgba(58, 50, 43, 0.12);
+  box-shadow: var(--shadow-md);
 }
+.btn-lemon:hover { box-shadow: var(--shadow-lg); }
 .btn-cream {
   background: var(--paper);
   color: var(--type-ink);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  box-shadow: var(--shadow-lg);
 }
+.btn-cream:hover { box-shadow: var(--shadow-xl); }
 .back-link, .text-link {
   background: none;
   border: none;
@@ -223,7 +303,9 @@ h1, h2, h3, p { margin: 0; }
   text-decoration: underline;
   text-underline-offset: 4px;
   text-transform: none;
+  transition: color var(--duration-fast) var(--ease-soft), opacity var(--duration-fast) var(--ease-soft);
 }
+.back-link:hover, .text-link:hover { color: var(--type-ink); }
 .swatch-row { display: inline-flex; gap: 10px; align-items: center; }
 .sw {
   width: 18px;
@@ -403,9 +485,14 @@ h1, h2, h3, p { margin: 0; }
   border: none;
   padding: 0;
   transform-origin: center center;
-  transition: transform 900ms var(--ease-heart);
+  transition:
+    transform 900ms var(--ease-heart),
+    filter var(--duration-normal) var(--ease-soft);
+  cursor: pointer;
   filter: drop-shadow(0 6px 10px rgba(20, 8, 8, 0.28));
 }
+.heart-btn:hover { filter: brightness(1.08) drop-shadow(0 4px 14px rgba(217, 74, 74, 0.35)); }
+.heart-btn:active { filter: brightness(0.98); }
 .heart-btn:focus-visible {
   outline: 2px solid var(--heart-pale);
   outline-offset: 10px;
@@ -678,15 +765,26 @@ h1, h2, h3, p { margin: 0; }
     linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 42%),
     linear-gradient(180deg, #FFF8EC 0%, #F7EFE0 45%, #EDE0C8 100%);
   box-shadow:
-    0 24px 48px rgba(20, 8, 8, 0.38),
+    var(--shadow-xl),
     0 8px 18px rgba(58, 50, 43, 0.16),
     0 0 0 1.75px rgba(40, 28, 24, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    var(--shadow-inset-soft);
   display: flex;
   flex-direction: column;
   gap: 6px;
   transform: rotate(-0.6deg);
   animation: passkeyCardIn 560ms var(--ease-soft) both;
+  transition:
+    box-shadow var(--duration-normal) var(--ease-soft),
+    transform var(--duration-normal) var(--ease-soft);
+}
+.passkey-card:focus-within {
+  box-shadow:
+    var(--shadow-xl),
+    0 12px 28px rgba(58, 50, 43, 0.2),
+    0 0 0 1.75px rgba(40, 28, 24, 0.55),
+    0 0 0 4px rgba(233, 167, 180, 0.22),
+    var(--shadow-inset-soft);
 }
 .passkey-card-grain {
   position: absolute;
@@ -747,19 +845,26 @@ h1, h2, h3, p { margin: 0; }
 .field input {
   appearance: none;
   border: 1.5px dashed rgba(40, 28, 24, 0.38);
-  border-radius: 4px 8px 6px 4px;
+  border-radius: var(--radius-sm) var(--radius-md) 6px var(--radius-sm);
   background: rgba(255, 248, 236, 0.72);
   padding: 7px 11px;
-  min-height: 38px; /* comfortable tap target floor */
+  min-height: 38px;
   font-family: var(--type-headline-family);
   font-size: 15px;
   font-weight: 400;
   line-height: 1.2;
   color: var(--type-ink);
   outline: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  transition: border-color 180ms var(--ease-soft), box-shadow 180ms var(--ease-soft), background 180ms var(--ease-soft);
+  box-shadow: var(--shadow-inset-soft);
+  transition:
+    border-color var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration-fast) var(--ease-soft),
+    background var(--duration-fast) var(--ease-soft);
   width: 100%;
+}
+.field input:hover:not(:focus) {
+  border-color: rgba(40, 28, 24, 0.52);
+  background: rgba(255, 252, 246, 0.88);
 }
 .field input::placeholder {
   color: var(--type-ink-warm);
@@ -802,16 +907,21 @@ h1, h2, h3, p { margin: 0; }
   margin: 0;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: transparent;
   color: var(--type-ink-warm);
   opacity: 0.55;
   cursor: pointer;
-  transition: opacity 180ms var(--ease-soft), background 180ms var(--ease-soft), color 180ms var(--ease-soft);
+  transition:
+    background var(--duration-fast) var(--ease-soft),
+    opacity var(--duration-fast) var(--ease-soft),
+    transform var(--duration-fast) var(--ease-soft),
+    color var(--duration-fast) var(--ease-soft);
 }
 .passkey-toggle:hover {
-  opacity: 0.9;
-  background: rgba(233, 167, 180, 0.12);
+  opacity: 0.95;
+  background: rgba(233, 167, 180, 0.16);
+  transform: translateY(calc(-50% - 1px));
 }
 .passkey-toggle:focus-visible {
   outline: 2px solid var(--rose);
@@ -1005,15 +1115,17 @@ h1, h2, h3, p { margin: 0; }
   width: min(100%, 720px);
   aspect-ratio: var(--stage-aspect, 4 / 5);
   max-height: min(78dvh, 820px);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--board);
   box-shadow:
-    0 18px 40px rgba(34, 43, 36, 0.28),
+    var(--shadow-lg),
     inset 0 0 0 1px rgba(251, 239, 217, 0.08);
   touch-action: none;
   user-select: none;
+  transition: box-shadow var(--duration-normal) var(--ease-soft), transform var(--duration-normal) var(--ease-soft);
 }
+.scratch-stage:hover { box-shadow: var(--shadow-xl), inset 0 0 0 1px rgba(251, 239, 217, 0.12); }
 .scratch-under {
   position: absolute;
   inset: 0;
@@ -1440,7 +1552,7 @@ h1, h2, h3, p { margin: 0; }
   transform: rotate(-0.4deg);
   background: var(--letter-surface);
   box-shadow:
-    0 24px 48px rgba(20, 8, 8, 0.38),
+    var(--shadow-xl),
     0 8px 18px rgba(58, 50, 43, 0.16),
     0 0 0 1.75px rgba(40, 28, 24, 0.55),
     inset 0 1px 0 color-mix(in srgb, var(--letter-surface) 70%, var(--paper-2));
@@ -1449,6 +1561,7 @@ h1, h2, h3, p { margin: 0; }
     clamp(28px, 3vw, 38px)
     clamp(34px, 3.8vw, 42px)
     clamp(26px, 2.8vw, 34px);
+  transition: box-shadow var(--duration-normal) var(--ease-soft);
 }
 .letter-paper-grain {
   position: absolute;
@@ -1557,14 +1670,15 @@ h1, h2, h3, p { margin: 0; }
 }
 .letter-body p {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: clamp(17px, 1.05vw, 18px);
   font-weight: 400;
-  line-height: 1.65;
-  letter-spacing: 0;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
   color: var(--type-ink);
-  margin: 0 0 1.05em;
-  max-width: 74ch;
+  margin: 0 0 1.15em;
+  max-width: var(--measure);
 }
+.letter-body p:last-child { margin-bottom: 0; }
 .letter-accent-rule {
   width: 42px;
   height: 2px;
@@ -1704,10 +1818,17 @@ h1, h2, h3, p { margin: 0; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  .view { transform: none !important; }
+  .passkey-card { animation: none; }
+  .open-letter-frame { transition: none; }
   .seal-stage.is-opening .heart-btn { transform: none; }
   .seal-stage.is-opening .bloom { animation: none; }
+  .heart-draw, .heart-btn::after { animation: none; }
   .pink-veil { transition: opacity 300ms linear; }
   .view { transition: opacity 300ms linear; }
   .film-reel.is-playing .reel-disc { animation: none; }
   .view-letter.is-text-waving .letter-body p { animation: none !important; }
+  .scratch-canvas,
+  .scratch-caption,
+  .memories-cta { transition-duration: 120ms; }
 }
