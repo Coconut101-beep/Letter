@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Noto+Serif+SC:wght@400;500;600&family=Reenie+Beanie&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=20260812c" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20260831a" />
 </head>
 <body>
   <div class="pink-veil" id="pink-veil" aria-hidden="true">
@@ -119,12 +119,14 @@
             <input
               id="input-passkey"
               name="passkey"
-              type="password"
+              type="text"
+              class="is-masked"
               placeholder="Your passkey"
               required
               autocomplete="off"
               autocapitalize="off"
               spellcheck="false"
+              inputmode="text"
             />
             <button
               type="button"
@@ -304,7 +306,7 @@
   <audio id="bg-music" preload="metadata"></audio>
 
   <script src="assets/js/scratch-board.js?v=20260812c"></script>
-  <script src="assets/js/app.js?v=20260812c"></script>
+  <script src="assets/js/app.js?v=20260831a"></script>
   <script>
     /* Inline Page-1 unlock — survives a failed app.js load */
     (function () {
@@ -331,7 +333,7 @@
           var n = document.getElementById("input-name");
           var p = document.getElementById("input-passkey");
           if (n) n.value = "";
-          if (p) { p.value = ""; p.type = "password"; }
+          if (p) { p.value = ""; p.classList.add("is-masked"); }
         }
         setTimeout(function () { passkey.classList.remove("is-entering"); }, reduce ? 320 : 450);
         if (veil) veil.classList.remove("is-on");

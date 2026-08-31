@@ -57,6 +57,16 @@
       .toLowerCase();
   }
 
+  /** Trim + NFC so IME-typed and pasted Unicode passkeys compare identically. */
+  function normalizeCredential(value) {
+    return String(value || "").normalize("NFC").trim();
+  }
+
+  function readPasskeyInput(input) {
+    if (!input) return "";
+    return normalizeCredential(input.value);
+  }
+
   /* ---------- Views ---------- */
   function showView(name) {
     const views = document.querySelectorAll(".view");
@@ -532,7 +542,11 @@
     if (!person) return;
     const letter = person.letter || {};
 
-    $("letter-title").textContent = person.title || "A letter";
+    const titleEl = $("letter-title");
+    const titleWrap = titleEl?.closest(".letter-title");
+    const titleText = (person.title || "").trim();
+    if (titleEl) titleEl.textContent = titleText;
+    if (titleWrap) titleWrap.hidden = !titleText;
     $("letter-signoff").textContent = letter.signoff || "With love,";
     $("letter-signname").textContent = letter.signName || "Lorina";
 
@@ -737,7 +751,7 @@
     if (name) name.value = "";
     if (pass) {
       pass.value = "";
-      pass.type = "password";
+      pass.classList.add("is-masked");
     }
     if (toggle) {
       toggle.classList.remove("is-revealed");
@@ -754,10 +768,10 @@
     btn.dataset.wired = "1";
 
     btn.addEventListener("click", () => {
-      const revealing = input.type === "password";
+      const revealing = input.classList.contains("is-masked");
       const start = input.selectionStart;
       const end = input.selectionEnd;
-      input.type = revealing ? "text" : "password";
+      input.classList.toggle("is-masked", !revealing);
       btn.classList.toggle("is-revealed", revealing);
       btn.setAttribute("aria-pressed", revealing ? "true" : "false");
       btn.setAttribute("aria-label", revealing ? "Hide passkey" : "Show passkey");
@@ -767,7 +781,7 @@
           input.setSelectionRange(start, end);
         }
       } catch (_) {
-        /* some browsers block selection on type switch */
+        /* some browsers block selection restore */
       }
       input.focus();
     });
@@ -785,8 +799,8 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const name = $("input-name").value;
-      const pass = $("input-passkey").value;
+      const name = normalizeCredential($("input-name")?.value);
+      const pass = readPasskeyInput($("input-passkey"));
 
       if (!supabaseConfigured()) {
         showPasskeyError(form, err, UNAVAILABLE_MSG, { shake: false });

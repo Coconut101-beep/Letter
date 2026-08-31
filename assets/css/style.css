@@ -784,6 +784,11 @@ h1, h2, h3, p { margin: 0; }
 .field-control input {
   padding-right: 42px;
 }
+/* Mask passkey like a password field while keeping type="text" for IME (Pinyin, etc.) */
+.field-control input.is-masked {
+  -webkit-text-security: disc;
+  text-security: disc;
+}
 .passkey-toggle {
   position: absolute;
   right: 2px;
