@@ -257,4 +257,21 @@ Single `index.html` with JS view switching:
 
 ---
 
+## Public demo
+
+Try the full interactive without a personal invitation:
+
+| Field | Value |
+|-------|-------|
+| **Name** | `demo` |
+| **Passkey** | `DEMO2026` |
+
+You'll see a public-domain excerpt of Vincent van Gogh's letter to his brother Theo (16 October 1888, Arles), including the scratchboard image of *Bedroom in Arles*.
+
+> **Note:** The demo row is flagged `is_demo = true` and is readable by the anonymous role for preview metadata only. Private letters remain behind passkey login and RLS.
+
+Run once in Supabase SQL Editor: [`supabase/demo_vincent_theo.sql`](supabase/demo_vincent_theo.sql)
+
+---
+
 *With love, Lorina*

@@ -9,6 +9,7 @@ SQL scripts for the private letter backend. Run in **Supabase → SQL Editor** i
 | `02_seed.sql` | 13 friends, letter shells, Adi media rows |
 | `03_seed_letters.sql` | Letter bodies + app settings (generated) |
 | `99_reset.sql` | Drop everything and start over |
+| `demo_vincent_theo.sql` | Public demo letter (Vincent → Theo) for visitors without a personal passkey |
 
 ## First-time setup
 
